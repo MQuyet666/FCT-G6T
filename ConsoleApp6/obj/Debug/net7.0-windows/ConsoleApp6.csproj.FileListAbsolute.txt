@@ -1,0 +1,5 @@
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\obj\Debug\net7.0-windows\ConsoleApp6.csproj.AssemblyReference.cache
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\obj\Debug\net7.0-windows\ConsoleApp6.GeneratedMSBuildEditorConfig.editorconfig
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\obj\Debug\net7.0-windows\ConsoleApp6.AssemblyInfoInputs.cache
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\obj\Debug\net7.0-windows\ConsoleApp6.AssemblyInfo.cs
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\obj\Debug\net7.0-windows\ConsoleApp6.csproj.CoreCompileInputs.cache

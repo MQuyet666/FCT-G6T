@@ -1,0 +1,168 @@
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-03 12:40:11
+Result: FAIL
+Error: Read Value Test timeout.
+Log: 1F 2F 3F FF 01 03 06 F4
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-03 12:40:28
+Result: PASS
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-03 13:13:41
+Result: FAIL
+Error: Power ACK failed.
+Log: No frame received.
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-03 13:13:49
+Result: FAIL
+Error: Power ACK failed.
+Log: No frame received.
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-03 13:14:03
+Result: FAIL
+Error: Power ACK failed.
+Log: No frame received.
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-03 13:14:22
+Result: FAIL
+Error: Power ACK failed.
+Log: No frame received.
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-03 13:14:46
+Result: PASS
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-03 13:15:01
+Result: FAIL
+Error: Button Test timeout.
+Log: 1F 2F 3F FF 01 01 06 F6
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-03 13:15:10
+Result: FAIL
+Error: RSSI Test failed.
+Log: 1F 2F 3F FF 01 03 06 F4
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-03 13:15:22
+Result: FAIL
+Error: LED blink not detected.
+Log: 1F 2F 3F FF 01 01 06 F6
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-03 13:15:34
+Result: PASS
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-03 13:20:03
+Result: FAIL
+Error: RSSI Test timeout.
+Log: 1F 2F 3F FF 01 03 06 F4
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-03 13:20:08
+Result: FAIL
+Error: LED blink not detected.
+Log: 1F 2F 3F FF 01 01 06 F6
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-03 13:20:21
+Result: PASS
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-03 13:20:35
+Result: PASS
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-03 13:20:42
+Result: FAIL
+Error: LED blink not detected.
+Log: 1F 2F 3F FF 01 01 06 F6
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-03 13:20:57
+Result: FAIL
+Error: Read Value Test failed.
+Log: 1F 2F 3F FF 01 03 06 F4
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-03 13:27:49
+Result: FAIL
+Error: Read Value Test timeout.
+Log: 1F 2F 3F FF 01 03 06 F4
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-03 13:28:47
+Result: PASS
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-03 13:57:07
+Result: FAIL
+Error: RSSI Test timeout.
+Log: 1F 2F 3F FF 01 03 06 F4
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-03 13:58:16
+Result: FAIL
+Error: LED blink not detected.
+Log: 1F 2F 3F FF 01 01 06 F6
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-03 13:58:46
+Result: FAIL
+Error: Read Value Test timeout.
+Log: 1F 2F 3F FF 01 03 06 F4
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-03 13:59:30
+Result: PASS
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-03 14:00:21
+Result: FAIL
+Error: Read Value Test failed.
+Log: 1F 2F 3F FF 01 03 06 F4
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-06 08:45:33
+Result: FAIL
+Error: Power ACK failed.
+Log: No frame received.
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-06 09:01:57
+Result: FAIL
+Error: Power ACK failed.
+Log: No frame received.
+//*******************************END TEST**********************************//

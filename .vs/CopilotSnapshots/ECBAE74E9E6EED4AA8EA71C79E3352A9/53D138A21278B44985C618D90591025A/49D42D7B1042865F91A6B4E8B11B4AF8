@@ -1,0 +1,167 @@
+﻿using System;
+using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
+using OpenCvSharp;
+using OpenCvSharp.Extensions;
+
+namespace ConsoleApp6
+{
+    internal sealed class CameraService : IDisposable
+    {
+        private readonly LedDetector _ledDetector;
+        private VideoCapture _capture;
+        private CancellationTokenSource _cts;
+        private Task _captureTask;
+        private bool _lastLedOn;
+
+        public event EventHandler<Bitmap> FrameReady;
+        public event EventHandler<bool> LedStatusChanged;
+        public event EventHandler<string> Error;
+
+        public CameraService(LedDetector ledDetector)
+        {
+            _ledDetector = ledDetector;
+        }
+
+        public bool Start(int cameraIndex)
+        {
+            try
+            {
+                Stop();
+                _capture = new VideoCapture(cameraIndex);
+                if (!_capture.IsOpened())
+                {
+                    OnError("Cannot open camera.");
+                    return false;
+                }
+
+                _cts = new CancellationTokenSource();
+                _captureTask = Task.Run(() => CaptureLoop(_cts.Token), _cts.Token);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                OnError("Camera start failed: " + ex.Message);
+                return false;
+            }
+        }
+
+        public void Refresh(int cameraIndex)
+        {
+            Start(cameraIndex);
+        }
+
+        public void Stop()
+        {
+            try
+            {
+                if (_cts != null)
+                {
+                    _cts.Cancel();
+                    if (_captureTask != null)
+                    {
+                        try
+                        {
+                            _captureTask.Wait(800);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    _cts.Dispose();
+                    _cts = null;
+                }
+
+                if (_capture != null)
+                {
+                    _capture.Release();
+                    _capture.Dispose();
+                    _capture = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                OnError("Camera stop failed: " + ex.Message);
+            }
+        }
+
+        private void CaptureLoop(CancellationToken token)
+        {
+            using (var frame = new Mat())
+            {
+                while (!token.IsCancellationRequested)
+                {
+                    try
+                    {
+                        if (_capture == null || !_capture.IsOpened())
+                        {
+                            Thread.Sleep(120);
+                            continue;
+                        }
+
+                        var ok = _capture.Read(frame);
+                        if (!ok || frame.Empty())
+                        {
+                            Thread.Sleep(30);
+                            continue;
+                        }
+
+                        int redCount;
+                        var ledOn = _ledDetector.IsLedOn(frame, out redCount);
+                        if (ledOn != _lastLedOn)
+                        {
+                            _lastLedOn = ledOn;
+                            OnLedStatusChanged(ledOn);
+                        }
+
+                        using (var displayFrame = frame.Clone())
+                        {
+                            var roi = _ledDetector.Roi;
+                            Cv2.Rectangle(displayFrame, roi, ledOn ? Scalar.Lime : Scalar.Red, 2);
+                            var bmp = BitmapConverter.ToBitmap(displayFrame);
+                            OnFrameReady(bmp);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        OnError("Camera loop error: " + ex.Message);
+                        Thread.Sleep(100);
+                    }
+                }
+            }
+        }
+
+        private void OnFrameReady(Bitmap bitmap)
+        {
+            var handler = FrameReady;
+            if (handler != null)
+            {
+                handler(this, bitmap);
+            }
+        }
+
+        private void OnLedStatusChanged(bool ledOn)
+        {
+            var handler = LedStatusChanged;
+            if (handler != null)
+            {
+                handler(this, ledOn);
+            }
+        }
+
+        private void OnError(string message)
+        {
+            var handler = Error;
+            if (handler != null)
+            {
+                handler(this, message);
+            }
+        }
+
+        public void Dispose()
+        {
+            Stop();
+        }
+    }
+}

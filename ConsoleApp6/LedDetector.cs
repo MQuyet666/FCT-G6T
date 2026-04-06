@@ -1,0 +1,70 @@
+using OpenCvSharp;
+
+namespace ConsoleApp6
+{
+    internal sealed class LedDetector
+    {
+        public Rect Roi { get; set; } = new Rect(1550, 1100, 200, 200);
+        public int PixelThreshold { get; set; } = 120;
+
+        private readonly Scalar _lowerRed1 = new Scalar(0, 120, 120);
+        private readonly Scalar _upperRed1 = new Scalar(10, 255, 255);
+        private readonly Scalar _lowerRed2 = new Scalar(170, 120, 120);
+        private readonly Scalar _upperRed2 = new Scalar(180, 255, 255);
+        private readonly Scalar _lowerGreen = new Scalar(35, 80, 80);
+        private readonly Scalar _upperGreen = new Scalar(85, 255, 255);
+
+        public bool IsLedOn(Mat frame, out int redPixelCount)
+        {
+            redPixelCount = 0;
+            if (frame == null || frame.Empty())
+            {
+                return false;
+            }
+
+            var safeRoi = ClampRoi(frame.Width, frame.Height, Roi);
+            if (safeRoi.Width <= 0 || safeRoi.Height <= 0)
+            {
+                return false;
+            }
+
+            using (var roiMat = new Mat(frame, safeRoi))
+            using (var hsv = new Mat())
+            using (var mask1 = new Mat())
+            using (var mask2 = new Mat())
+            using (var redMask = new Mat())
+            using (var greenMask = new Mat())
+            using (var mask = new Mat())
+            {
+                Cv2.CvtColor(roiMat, hsv, ColorConversionCodes.BGR2HSV);
+                Cv2.InRange(hsv, _lowerRed1, _upperRed1, mask1);
+                Cv2.InRange(hsv, _lowerRed2, _upperRed2, mask2);
+                Cv2.BitwiseOr(mask1, mask2, redMask);
+                Cv2.InRange(hsv, _lowerGreen, _upperGreen, greenMask);
+                Cv2.BitwiseOr(redMask, greenMask, mask);
+                redPixelCount = Cv2.CountNonZero(mask);
+                return redPixelCount >= PixelThreshold;
+            }
+        }
+
+        private static Rect ClampRoi(int frameWidth, int frameHeight, Rect roi)
+        {
+            var x = roi.X < 0 ? 0 : roi.X;
+            var y = roi.Y < 0 ? 0 : roi.Y;
+            var w = roi.Width;
+            var h = roi.Height;
+
+            if (x + w > frameWidth)
+            {
+                w = frameWidth - x;
+            }
+
+            if (y + h > frameHeight)
+            {
+                h = frameHeight - y;
+            }
+
+            return new Rect(x, y, w, h);
+        }
+    }
+}

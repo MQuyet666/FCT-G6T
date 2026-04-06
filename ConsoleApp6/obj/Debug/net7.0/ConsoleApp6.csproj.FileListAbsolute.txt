@@ -1,0 +1,14 @@
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\bin\Debug\net7.0\ConsoleApp6.exe
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\bin\Debug\net7.0\ConsoleApp6.deps.json
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\bin\Debug\net7.0\ConsoleApp6.runtimeconfig.json
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\bin\Debug\net7.0\ConsoleApp6.dll
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\bin\Debug\net7.0\ConsoleApp6.pdb
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\obj\Debug\net7.0\ConsoleApp6.GeneratedMSBuildEditorConfig.editorconfig
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\obj\Debug\net7.0\ConsoleApp6.AssemblyInfoInputs.cache
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\obj\Debug\net7.0\ConsoleApp6.AssemblyInfo.cs
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\obj\Debug\net7.0\ConsoleApp6.csproj.CoreCompileInputs.cache
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\obj\Debug\net7.0\ConsoleApp6.dll
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\obj\Debug\net7.0\refint\ConsoleApp6.dll
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\obj\Debug\net7.0\ConsoleApp6.pdb
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\obj\Debug\net7.0\ConsoleApp6.genruntimeconfig.cache
+E:\Work\C#\New folder\.vs\ConsoleApp6\ConsoleApp6\obj\Debug\net7.0\ref\ConsoleApp6.dll

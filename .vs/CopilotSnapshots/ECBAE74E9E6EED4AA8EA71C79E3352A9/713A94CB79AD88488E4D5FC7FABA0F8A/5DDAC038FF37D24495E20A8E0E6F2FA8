@@ -1,0 +1,28 @@
+﻿using System;
+
+namespace ConsoleApp6
+{
+    internal sealed class TestResult
+    {
+        public string Serial { get; set; } = string.Empty;
+        public int TestNumber { get; set; }
+        public bool LedOn { get; set; }
+        public bool Pass { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.Now;
+
+        public string ToComPayload()
+        {
+            return LedOn ? "ON\n" : "OFF\n";
+        }
+
+        public string ToLogLine()
+        {
+            return string.Format("[{0:HH:mm:ss}] Serial={1}, Test={2}, LED={3}, Result={4}",
+                Timestamp,
+                Serial,
+                TestNumber,
+                LedOn ? "ON" : "OFF",
+                Pass ? "PASS" : "FAIL");
+        }
+    }
+}

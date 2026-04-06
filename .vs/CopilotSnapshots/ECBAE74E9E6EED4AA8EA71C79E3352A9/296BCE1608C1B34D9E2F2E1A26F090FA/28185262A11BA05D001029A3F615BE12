@@ -1,0 +1,418 @@
+﻿using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace ConsoleApp6
+{
+    public partial class Form1 : Form
+    {
+        private readonly LedDetector _ledDetector;
+        private readonly CameraService _cameraService;
+        private readonly SerialService _serialService;
+
+        private readonly object _testLock = new object();
+        private readonly object _blinkLock = new object();
+        private bool _isTesting;
+        private bool _latestLedOn;
+        private bool _isStartBlinkCounting;
+        private int _startBlinkCount;
+        private bool _lastLedStateForBlink;
+
+        public Form1()
+        {
+            InitializeComponent();
+
+            MakeLedStatusCircle();
+
+            _ledDetector = new LedDetector();
+            _cameraService = new CameraService(_ledDetector);
+            _serialService = new SerialService();
+
+            RegisterUiEvents();
+            RegisterServiceEvents();
+        }
+
+        private void RegisterUiEvents()
+        {
+            this.Load += Form1_Load;
+            this.FormClosing += Form1_FormClosing;
+            pnlLedStatus.Resize += (s, e) => MakeLedStatusCircle();
+
+            btnStart.Click += async (s, e) => await RunSelectedTestAsync("UI Start");
+            btnRefresh.Click += BtnRefresh_Click;
+            btnConnect.Click += BtnConnect_Click;
+
+            chkTest1.CheckedChanged += TestCheckbox_CheckedChanged;
+            chkTest2.CheckedChanged += TestCheckbox_CheckedChanged;
+            chkTest3.CheckedChanged += TestCheckbox_CheckedChanged;
+
+            btnTest1.Click += async (s, e) => await RunSpecificTestAsync(1, "UI Test1");
+            btnTest2.Click += async (s, e) => await RunSpecificTestAsync(2, "UI Test2");
+            btnTest3.Click += async (s, e) => await RunSpecificTestAsync(3, "UI Test3");
+        }
+
+        private void MakeLedStatusCircle()
+        {
+            if (pnlLedStatus.Width <= 0 || pnlLedStatus.Height <= 0)
+            {
+                return;
+            }
+
+            var path = new GraphicsPath();
+            path.AddEllipse(0, 0, pnlLedStatus.Width, pnlLedStatus.Height);
+
+            var oldRegion = pnlLedStatus.Region;
+            pnlLedStatus.Region = new Region(path);
+            oldRegion?.Dispose();
+            path.Dispose();
+        }
+
+        private void RegisterServiceEvents()
+        {
+            _cameraService.FrameReady += CameraService_FrameReady;
+            _cameraService.LedStatusChanged += CameraService_LedStatusChanged;
+            _cameraService.Error += (s, message) => Log(message);
+
+            _serialService.DataReceived += SerialService_DataReceived;
+            _serialService.Error += (s, message) => Log(message);
+            _serialService.ConnectionChanged += SerialService_ConnectionChanged;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            cmbBaudRate.Items.AddRange(new object[] { "9600", "19200", "38400", "57600", "115200" });
+            cmbBaudRate.SelectedIndex = 4;
+            txtSerial.Text = "SN001";
+            chkTest1.Checked = true;
+
+            RefreshComPortList();
+            var cameraStarted = _cameraService.Start(0);
+            Log(cameraStarted ? "Camera started." : "Camera start failed.");
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _cameraService.Dispose();
+            _serialService.Dispose();
+
+            if (picCamera.Image != null)
+            {
+                var old = picCamera.Image;
+                picCamera.Image = null;
+                old.Dispose();
+            }
+        }
+
+        private void BtnRefresh_Click(object sender, EventArgs e)
+        {
+            RefreshComPortList();
+            _cameraService.Refresh(0);
+            Log("Camera refreshed.");
+        }
+
+        private void BtnConnect_Click(object sender, EventArgs e)
+        {
+            if (_serialService.IsConnected)
+            {
+                _serialService.Disconnect();
+                Log("COM disconnected.");
+                return;
+            }
+
+            if (cmbComPort.SelectedItem == null || cmbBaudRate.SelectedItem == null)
+            {
+                Log("Please select COM port and baud rate.");
+                return;
+            }
+
+            var port = cmbComPort.SelectedItem.ToString();
+            int baud;
+            if (!int.TryParse(cmbBaudRate.SelectedItem.ToString(), out baud))
+            {
+                baud = 115200;
+            }
+
+            var connected = _serialService.Connect(port, baud);
+            Log(connected ? "COM connected." : "COM connect failed.");
+
+            if (connected)
+            {
+                _serialService.SendByte(0x00);
+                Log("UART TX: 0x00 (connected)");
+            }
+        }
+
+        private void TestCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            var changed = sender as CheckBox;
+            if (changed == null || !changed.Checked)
+            {
+                return;
+            }
+
+            foreach (var chk in new[] { chkTest1, chkTest2, chkTest3 })
+            {
+                if (!ReferenceEquals(chk, changed))
+                {
+                    chk.Checked = false;
+                }
+            }
+        }
+
+        private async Task RunSelectedTestAsync(string source)
+        {
+            if (!_serialService.IsConnected)
+            {
+                Log("Please connect COM port before starting test.");
+                return;
+            }
+
+            var selected = GetSelectedTestNumber();
+            if (selected <= 0)
+            {
+                Log("Select one test first.");
+                return;
+            }
+
+            if (string.Equals(source, "UI Start", StringComparison.Ordinal))
+            {
+                _serialService.SendByte(0x01);
+                Log("UART TX: 0x01 (start)");
+
+                StartBlinkCounting();
+                await Task.Delay(TimeSpan.FromSeconds(5));
+                var blinkCount = StopBlinkCounting();
+
+                if (blinkCount > 3)
+                {
+                    _serialService.SendByte(0x02);
+                    Log(string.Format("UART TX: 0x02 (blink count={0})", blinkCount));
+                }
+                else
+                {
+                    _serialService.SendByte(0x03);
+                    Log(string.Format("UART TX: 0x03 (blink count={0})", blinkCount));
+                }
+            }
+
+            await RunTestInternalAsync(selected, source);
+        }
+
+        private void StartBlinkCounting()
+        {
+            lock (_blinkLock)
+            {
+                _startBlinkCount = 0;
+                _lastLedStateForBlink = _latestLedOn;
+                _isStartBlinkCounting = true;
+            }
+
+            Log("Start blink counting for 3s...");
+        }
+
+        private int StopBlinkCounting()
+        {
+            int count;
+            lock (_blinkLock)
+            {
+                count = _startBlinkCount;
+                _isStartBlinkCounting = false;
+                _startBlinkCount = 0;
+            }
+
+            return count;
+        }
+
+        private async Task RunSpecificTestAsync(int testNumber, string source)
+        {
+            SetSelectedTest(testNumber);
+            await RunTestInternalAsync(testNumber, source);
+        }
+
+        private async Task RunTestInternalAsync(int testNumber, string source)
+        {
+            lock (_testLock)
+            {
+                if (_isTesting)
+                {
+                    Log("A test is already running.");
+                    return;
+                }
+                _isTesting = true;
+            }
+
+            try
+            {
+                var serial = txtSerial.Text.Trim();
+                if (string.IsNullOrWhiteSpace(serial))
+                {
+                    Log("Serial is required.");
+                    return;
+                }
+
+                Log(string.Format("Start Test {0} ({1})...", testNumber, source));
+                await Task.Delay(300);
+
+                var result = new TestResult
+                {
+                    Serial = serial,
+                    TestNumber = testNumber,
+                    LedOn = _latestLedOn,
+                    Pass = _latestLedOn,
+                    Timestamp = DateTime.Now
+                };
+
+                UpdateLedUi(result.LedOn);
+                Log(result.ToLogLine());
+
+                if (_serialService.IsConnected && !string.Equals(source, "UI Start", StringComparison.Ordinal))
+                {
+                    _serialService.Send(result.ToComPayload());
+                    Log("Result sent via COM.");
+                }
+            }
+            finally
+            {
+                lock (_testLock)
+                {
+                    _isTesting = false;
+                }
+            }
+        }
+
+        private int GetSelectedTestNumber()
+        {
+            if (chkTest1.Checked) return 1;
+            if (chkTest2.Checked) return 2;
+            if (chkTest3.Checked) return 3;
+            return 0;
+        }
+
+        private void SetSelectedTest(int testNumber)
+        {
+            chkTest1.Checked = testNumber == 1;
+            chkTest2.Checked = testNumber == 2;
+            chkTest3.Checked = testNumber == 3;
+        }
+
+        private void RefreshComPortList()
+        {
+            var current = cmbComPort.SelectedItem != null ? cmbComPort.SelectedItem.ToString() : string.Empty;
+            var ports = _serialService.GetPortNames().OrderBy(p => p).ToArray();
+
+            cmbComPort.Items.Clear();
+            cmbComPort.Items.AddRange(ports);
+
+            if (!string.IsNullOrEmpty(current) && ports.Contains(current))
+            {
+                cmbComPort.SelectedItem = current;
+            }
+            else if (ports.Length > 0)
+            {
+                cmbComPort.SelectedIndex = 0;
+            }
+        }
+
+        private void CameraService_FrameReady(object sender, Bitmap bitmap)
+        {
+            if (!IsHandleCreated)
+            {
+                bitmap.Dispose();
+                return;
+            }
+
+            BeginInvoke((Action)(() =>
+            {
+                var old = picCamera.Image;
+                picCamera.Image = bitmap;
+                if (old != null)
+                {
+                    old.Dispose();
+                }
+            }));
+        }
+
+        private void CameraService_LedStatusChanged(object sender, bool ledOn)
+        {
+            lock (_blinkLock)
+            {
+                if (_isStartBlinkCounting && ledOn && !_lastLedStateForBlink)
+                {
+                    _startBlinkCount++;
+                }
+
+                _lastLedStateForBlink = ledOn;
+            }
+
+            _latestLedOn = ledOn;
+            UpdateLedUi(ledOn);
+        }
+
+        private void UpdateLedUi(bool ledOn)
+        {
+            if (!IsHandleCreated)
+            {
+                return;
+            }
+
+            if (InvokeRequired)
+            {
+                BeginInvoke((Action)(() => UpdateLedUi(ledOn)));
+                return;
+            }
+
+            pnlLedStatus.BackColor = ledOn ? Color.LimeGreen : Color.DarkRed;
+        }
+
+        private void SerialService_DataReceived(object sender, string data)
+        {
+            Log("UART RX: " + data);
+
+            if (data.IndexOf("Start", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                if (!IsHandleCreated)
+                {
+                    return;
+                }
+
+                BeginInvoke((Action)(async () => await RunSelectedTestAsync("UART Start")));
+            }
+        }
+
+        private void SerialService_ConnectionChanged(object sender, bool connected)
+        {
+            if (!IsHandleCreated)
+            {
+                return;
+            }
+
+            if (InvokeRequired)
+            {
+                BeginInvoke((Action)(() => SerialService_ConnectionChanged(sender, connected)));
+                return;
+            }
+
+            btnConnect.Text = connected ? "Disconnect" : "Connect";
+        }
+
+        private void Log(string message)
+        {
+            if (!IsHandleCreated)
+            {
+                return;
+            }
+
+            if (InvokeRequired)
+            {
+                BeginInvoke((Action)(() => Log(message)));
+                return;
+            }
+
+            txtLog.AppendText(string.Format("[{0:HH:mm:ss}] {1}{2}", DateTime.Now, message, Environment.NewLine));
+            txtLog.ScrollToCaret();
+        }
+    }
+}
