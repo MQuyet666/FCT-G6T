@@ -376,7 +376,7 @@ namespace ConsoleApp6
             // lblRssiTestTitle
             // 
             this.lblRssiTestTitle.AutoSize = true;
-            this.lblRssiTestTitle.Location = new System.Drawing.Point(250, 33);
+            this.lblRssiTestTitle.Location = new System.Drawing.Point(16, 147);
             this.lblRssiTestTitle.Name = "lblRssiTestTitle";
             this.lblRssiTestTitle.Size = new System.Drawing.Size(73, 20);
             this.lblRssiTestTitle.TabIndex = 4;
@@ -387,7 +387,7 @@ namespace ConsoleApp6
             this.pnlRssiTestResult.BackColor = System.Drawing.Color.DimGray;
             this.pnlRssiTestResult.BorderStyle = BorderStyle.FixedSingle;
             this.pnlRssiTestResult.Controls.Add(this.lblRssiTestResult);
-            this.pnlRssiTestResult.Location = new System.Drawing.Point(448, 31);
+            this.pnlRssiTestResult.Location = new System.Drawing.Point(200, 145);
             this.pnlRssiTestResult.Name = "pnlRssiTestResult";
             this.pnlRssiTestResult.Size = new System.Drawing.Size(22, 22);
             this.pnlRssiTestResult.TabIndex = 5;
@@ -406,7 +406,7 @@ namespace ConsoleApp6
             // lblReadValueTestTitle
             // 
             this.lblReadValueTestTitle.AutoSize = true;
-            this.lblReadValueTestTitle.Location = new System.Drawing.Point(250, 90);
+            this.lblReadValueTestTitle.Location = new System.Drawing.Point(250, 33);
             this.lblReadValueTestTitle.Name = "lblReadValueTestTitle";
             this.lblReadValueTestTitle.Size = new System.Drawing.Size(116, 20);
             this.lblReadValueTestTitle.TabIndex = 6;
@@ -417,7 +417,7 @@ namespace ConsoleApp6
             this.pnlReadValueTestResult.BackColor = System.Drawing.Color.DimGray;
             this.pnlReadValueTestResult.BorderStyle = BorderStyle.FixedSingle;
             this.pnlReadValueTestResult.Controls.Add(this.lblReadValueTestResult);
-            this.pnlReadValueTestResult.Location = new System.Drawing.Point(448, 90);
+            this.pnlReadValueTestResult.Location = new System.Drawing.Point(448, 31);
             this.pnlReadValueTestResult.Name = "pnlReadValueTestResult";
             this.pnlReadValueTestResult.Size = new System.Drawing.Size(22, 22);
             this.pnlReadValueTestResult.TabIndex = 7;
@@ -436,7 +436,7 @@ namespace ConsoleApp6
             // lblWdiTestTitle
             // 
             this.lblWdiTestTitle.AutoSize = true;
-            this.lblWdiTestTitle.Location = new System.Drawing.Point(16, 147);
+            this.lblWdiTestTitle.Location = new System.Drawing.Point(250, 90);
             this.lblWdiTestTitle.Name = "lblWdiTestTitle";
             this.lblWdiTestTitle.Size = new System.Drawing.Size(72, 20);
             this.lblWdiTestTitle.TabIndex = 8;
@@ -447,7 +447,7 @@ namespace ConsoleApp6
             this.pnlWdiTestResult.BackColor = System.Drawing.Color.DimGray;
             this.pnlWdiTestResult.BorderStyle = BorderStyle.FixedSingle;
             this.pnlWdiTestResult.Controls.Add(this.lblWdiTestResult);
-            this.pnlWdiTestResult.Location = new System.Drawing.Point(200, 145);
+            this.pnlWdiTestResult.Location = new System.Drawing.Point(448, 90);
             this.pnlWdiTestResult.Name = "pnlWdiTestResult";
             this.pnlWdiTestResult.Size = new System.Drawing.Size(22, 22);
             this.pnlWdiTestResult.TabIndex = 9;

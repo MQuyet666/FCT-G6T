@@ -174,13 +174,34 @@ namespace ConsoleApp6
             _qrSerialService.Error += (s, message) => Log($"QR ({_qrSerialService.PortName}): {message}");
             _qrSerialService.ConnectionChanged += QrSerialService_ConnectionChanged;
 
+            _detectorSerialService.DataReceived += DetectorSerialService_DataReceived;
             _detectorSerialService.DataReceivedBytes += DetectorSerialService_DataReceivedBytes;
             _detectorSerialService.Error += (s, message) => Log($"DT ({_detectorSerialService.PortName}): {message}");
             _detectorSerialService.ConnectionChanged += DetectorSerialService_ConnectionChanged;
         }
 
+        private void SetDeviceSelectionEnabled(bool enabled)
+        {
+            if (!IsHandleCreated)
+            {
+                return;
+            }
+
+            if (InvokeRequired)
+            {
+                BeginInvoke((Action)(() => SetDeviceSelectionEnabled(enabled)));
+                return;
+            }
+
+            rdoSmokeDetector.Enabled = enabled;
+            rdoHeatDetector.Enabled = enabled;
+            rdoPushButton.Enabled = enabled;
+            rdoHornStrobe.Enabled = enabled;
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
+            LogEvent(nameof(Form1_Load));
             _suppressOverallResultUpdate = true;
             btnConnect.Text = "G6T Connect";
             txtSerial.Text = "SN001";
@@ -221,6 +242,7 @@ namespace ConsoleApp6
         private void DeviceTypeRadio_CheckedChanged(object sender, EventArgs e)
         {
             var radio = sender as RadioButton;
+            LogEvent($"{nameof(DeviceTypeRadio_CheckedChanged)}: {radio?.Name} Checked={radio?.Checked}");
             if (radio == null || !radio.Checked)
             {
                 return;
@@ -282,7 +304,7 @@ namespace ConsoleApp6
             if (isPushButton)
             {
                 lblButtonTestTitle.Text = "2. Button Test";
-                lblWdiTestTitle.Text = "3. WDI Test";
+                lblWdiTestTitle.Text = "5. WDI Test";
                 return;
             }
 
@@ -322,6 +344,7 @@ namespace ConsoleApp6
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            LogEvent(nameof(Form1_FormClosing));
             _comPortRefreshTimer.Stop();
             _resultSpinnerTimer.Stop();
             _cameraService.Dispose();
@@ -339,6 +362,7 @@ namespace ConsoleApp6
 
         private void BtnQrConnect_Click(object sender, EventArgs e)
         {
+            LogEvent(nameof(BtnQrConnect_Click));
             if (_qrSerialService.IsConnected)
             {
                 var portName = _qrSerialService.PortName;
@@ -360,6 +384,7 @@ namespace ConsoleApp6
 
         private void BtnDetectorConnect_Click(object sender, EventArgs e)
         {
+            LogEvent(nameof(BtnDetectorConnect_Click));
             if (_detectorSerialService.IsConnected)
             {
                 var portName = _detectorSerialService.PortName;
@@ -381,11 +406,13 @@ namespace ConsoleApp6
 
         private void BtnClearLog_Click(object sender, EventArgs e)
         {
+            LogEvent(nameof(BtnClearLog_Click));
             txtLog.Clear();
         }
 
         private void BtnConnect_Click(object sender, EventArgs e)
         {
+            LogEvent(nameof(BtnConnect_Click));
             if (_serialService.IsConnected)
             {
                 var portName = _serialService.PortName;
@@ -414,85 +441,95 @@ namespace ConsoleApp6
 
         private async Task RunSelectedTestAsync(string source)
         {
-            if (!_serialService.IsConnected)
+            LogEvent($"{nameof(RunSelectedTestAsync)}: {source}");
+            SetDeviceSelectionEnabled(false);
+            try
             {
-                Log("Please connect G6T COM port before starting test.");
-                return;
-            }
-            const int selected = 1;
-
-            _resultWritten = false;
-
-            Log($"Running test {selected} ({source})");
-
-            var serialValue = txtSerial.Text.Trim();
-            if (string.IsNullOrWhiteSpace(serialValue))
-            {
-                serialValue = await TryReadQrSerialAsync();
-                if (!string.IsNullOrWhiteSpace(serialValue))
+                if (!_serialService.IsConnected)
                 {
-                    txtSerial.Text = serialValue;
-                }
-                else
-                {
-                    FailAndStopAllTests("QR scan timeout.");
+                    Log("Please connect G6T COM port before starting test.");
                     return;
                 }
-            }
+                const int selected = 1;
 
-            if (string.Equals(source, "UI Start", StringComparison.Ordinal))
-            {
-                SetStartResultDisplay("WAIT", Color.DimGray);
-                SetLedTestResultDisplay("WAIT", Color.DimGray);
-                SetButtonTestResultDisplay("WAIT", Color.DimGray);
-                SetRssiTestResultDisplay("WAIT", Color.DimGray);
-                SetReadValueTestResultDisplay("WAIT", Color.DimGray);
-                SetWdiTestResultDisplay("WAIT", Color.DimGray);
-                ResetCurrentDeviceState();
+                _resultWritten = false;
 
-                var powerData = (byte)0x01;
-                var powerAck = await ExecuteStartFramesAsync(powerData, 5000);
-                if (!powerAck)
+                Log($"Running test {selected} ({source})");
+
+                var serialValue = txtSerial.Text.Trim();
+                if (string.IsNullOrWhiteSpace(serialValue))
                 {
-                    SetTestResultsErrorFrom(MainTestStep.Led);
-                    FailAndStopAllTests("Power ACK failed.");
+                    serialValue = await TryReadQrSerialAsync();
+                    if (!string.IsNullOrWhiteSpace(serialValue))
+                    {
+                        txtSerial.Text = serialValue;
+                    }
+                    else
+                    {
+                        FailAndStopAllTests("QR scan timeout.");
+                        return;
+                    }
+                }
+
+                if (string.Equals(source, "UI Start", StringComparison.Ordinal))
+                {
+                    SetStartResultDisplay("WAIT", Color.DimGray);
+                    SetLedTestResultDisplay("WAIT", Color.DimGray);
+                    SetButtonTestResultDisplay("WAIT", Color.DimGray);
+                    SetRssiTestResultDisplay("WAIT", Color.DimGray);
+                    SetReadValueTestResultDisplay("WAIT", Color.DimGray);
+                    SetWdiTestResultDisplay("WAIT", Color.DimGray);
+                    ResetCurrentDeviceState();
+
+                    var powerData = (byte)0x01;
+                    var powerAck = await ExecuteStartFramesAsync(powerData, 5000);
+                    if (!powerAck)
+                    {
+                        SetTestResultsErrorFrom(MainTestStep.Led);
+                        FailAndStopAllTests("Power ACK failed.");
+                        return;
+                    }
+
+                    SetStartResultDisplay("RUNNING", Color.SteelBlue);
+
+                    StartBlinkCounting();
+                    await Task.Delay(TimeSpan.FromSeconds(3));
+                    var blinkDetected = StopBlinkCounting();
+
+                    if (blinkDetected)
+                    {
+                        var resultCode = (byte)0x02;
+                        _serialService.SendByte(resultCode);
+                        Log($"G6T ({_serialService.PortName}) TX: 0x02 (LED blink detected)");
+                        SetStartResultDisplay(" PASS", Color.SeaGreen);
+                        ApplyLedTestResultCode(resultCode);
+
+                        await RunButtonTestAsync();
+                    }
+                    else
+                    {
+                        var resultCode = (byte)0x03;
+                        _serialService.SendByte(resultCode);
+                        Log($"G6T ({_serialService.PortName}) TX: 0x03 (no LED blink detected)");
+                        ApplyLedTestResultCode(resultCode);
+                        SetTestResultsErrorFrom(MainTestStep.Button);
+                        FailAndStopAllTests("LED blink not detected.");
+                    }
+
                     return;
                 }
 
-                SetStartResultDisplay("RUNNING", Color.SteelBlue);
-
-                StartBlinkCounting();
-                await Task.Delay(TimeSpan.FromSeconds(3));
-                var blinkDetected = StopBlinkCounting();
-
-                if (blinkDetected)
-                {
-                    var resultCode = (byte)0x02;
-                    _serialService.SendByte(resultCode);
-                    Log($"G6T ({_serialService.PortName}) TX: 0x02 (LED blink detected)");
-                    SetStartResultDisplay(" PASS", Color.SeaGreen);
-                    ApplyLedTestResultCode(resultCode);
-
-                    await RunButtonTestAsync();
-                }
-                else
-                {
-                    var resultCode = (byte)0x03;
-                    _serialService.SendByte(resultCode);
-                    Log($"G6T ({_serialService.PortName}) TX: 0x03 (no LED blink detected)");
-                    ApplyLedTestResultCode(resultCode);
-                    SetTestResultsErrorFrom(MainTestStep.Button);
-                    FailAndStopAllTests("LED blink not detected.");
-                }
-
-                return;
+                await RunTestInternalAsync(selected, source);
             }
-
-            await RunTestInternalAsync(selected, source);
+            finally
+            {
+                SetDeviceSelectionEnabled(true);
+            }
         }
 
         private void SerialService_DataReceivedBytes(object sender, byte[] data)
         {
+            LogEvent(nameof(SerialService_DataReceivedBytes));
             if (data == null || data.Length == 0)
             {
                 return;
@@ -680,6 +717,7 @@ namespace ConsoleApp6
 
         private void CameraService_LedStatusChanged(object sender, bool ledOn)
         {
+            LogEvent($"{nameof(CameraService_LedStatusChanged)}: LedOn={ledOn}");
             lock (_blinkLock)
             {
                 if (_isStartBlinkCounting && ledOn && !_lastLedStateForBlink)
@@ -734,6 +772,7 @@ namespace ConsoleApp6
 
         private void SerialService_DataReceived(object sender, string data)
         {
+            LogEvent(nameof(SerialService_DataReceived));
             Log($"G6T ({_serialService.PortName}) RX: {data}");
 
             if (data.IndexOf("0x02", StringComparison.OrdinalIgnoreCase) >= 0)
@@ -767,6 +806,7 @@ namespace ConsoleApp6
 
         private void SerialService_ConnectionChanged(object sender, bool connected)
         {
+            LogEvent($"{nameof(SerialService_ConnectionChanged)}: Connected={connected}");
             if (!IsHandleCreated)
             {
                 return;
@@ -796,6 +836,7 @@ namespace ConsoleApp6
 
         private void QrSerialService_ConnectionChanged(object sender, bool connected)
         {
+            LogEvent($"{nameof(QrSerialService_ConnectionChanged)}: Connected={connected}");
             if (!IsHandleCreated)
             {
                 return;
@@ -812,6 +853,7 @@ namespace ConsoleApp6
 
         private void DetectorSerialService_ConnectionChanged(object sender, bool connected)
         {
+            LogEvent($"{nameof(DetectorSerialService_ConnectionChanged)}: Connected={connected}");
             if (!IsHandleCreated)
             {
                 return;
@@ -851,6 +893,7 @@ namespace ConsoleApp6
 
         private void QrSerialService_DataReceived(object sender, string data)
         {
+            LogEvent(nameof(QrSerialService_DataReceived));
             var qrValue = data == null ? string.Empty : data.Trim();
             if (string.IsNullOrWhiteSpace(qrValue))
             {
@@ -913,7 +956,7 @@ namespace ConsoleApp6
 
         private void DetectorSerialService_DataReceived(object sender, string data)
         {
-            // Detector RX is handled in byte stream parser to avoid fragmented logs.
+            // Raw DT text is handled in frame parser to avoid fragmented logs.
         }
 
         private void ParseDetectorFrames(byte[] data)
@@ -1007,9 +1050,15 @@ namespace ConsoleApp6
                 return false;
             }
 
-            var frameLength = (etxIndex - stxIndex) + 2;
+            var bccIndex = etxIndex + 1;
+            var frameLength = (bccIndex - stxIndex) + 1;
             var frame = _detectorRxBuffer.Skip(stxIndex).Take(frameLength).ToArray();
             _detectorRxBuffer.RemoveRange(0, stxIndex + frameLength);
+
+            if (ComputeDetectorBcc(frame, frame.Length - 1) != frame[frame.Length - 1])
+            {
+                return true;
+            }
 
             var payloadLength = etxIndex - stxIndex - 1;
             var payload = payloadLength > 0 ? Encoding.ASCII.GetString(frame, 1, payloadLength) : string.Empty;
@@ -1033,6 +1082,17 @@ namespace ConsoleApp6
             return true;
         }
 
+        private static byte ComputeDetectorBcc(byte[] buffer, int length)
+        {
+            byte bcc = 0;
+            for (var i = 1; i < length; i++)
+            {
+                bcc ^= buffer[i];
+            }
+
+            return bcc;
+        }
+
         private void Log(string message)
         {
             if (!IsHandleCreated)
@@ -1048,6 +1108,23 @@ namespace ConsoleApp6
 
             txtLog.AppendText(string.Format("[{0:HH:mm:ss}] {1}{2}", DateTime.Now, message, Environment.NewLine));
             txtLog.ScrollToCaret();
+        }
+
+        private void LogFrame(string prefix, string portName, byte[] frame)
+        {
+            var port = string.IsNullOrWhiteSpace(portName) ? "" : $"{portName}: ";
+            var frameHex = ToHex(frame);
+            Log($"{prefix} {port}Frame: {frameHex}");
+        }
+
+        private void LogEvent(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return;
+            }
+
+            Log($"Event: {name}");
         }
 
         private void ApplyLedTestResultCode(byte resultCode)
@@ -1441,7 +1518,7 @@ namespace ConsoleApp6
             _pendingDetectorRssiTcs = tcs;
 
             Log("PC send: <SOH>R1<STX>2.0.0()<ETX><BCC>");
-            Log($"DT ({_detectorSerialService.PortName}) TX HEX: {ToHex(packet)}");
+            LogFrame("DT TX", _detectorSerialService.PortName, packet);
             _detectorSerialService.SendBytes(packet);
             Log($"DT ({_detectorSerialService.PortName}) wait ACK 3s");
 
@@ -1499,7 +1576,7 @@ namespace ConsoleApp6
             _pendingReadValuePattern = readValuePattern;
 
             Log($"PC send: <SOH>R1<STX>{readValuePattern.TrimEnd('(')}()<ETX><BCC>");
-            Log($"DT ({_detectorSerialService.PortName}) TX HEX: {ToHex(packet)}");
+            LogFrame("DT TX", _detectorSerialService.PortName, packet);
             _detectorSerialService.SendBytes(packet);
             Log($"DT ({_detectorSerialService.PortName}) wait Read Value ACK 3s");
 
@@ -1638,13 +1715,7 @@ namespace ConsoleApp6
                 0x00
             };
 
-            byte bcc = 0;
-            for (var i = 0; i < packet.Length - 1; i++)
-            {
-                bcc ^= packet[i];
-            }
-
-            packet[packet.Length - 1] = bcc;
+            packet[packet.Length - 1] = ComputeDetectorBcc(packet, packet.Length - 1);
             return packet;
         }
 
@@ -1661,13 +1732,7 @@ namespace ConsoleApp6
                 0x00
             };
 
-            byte bcc = 0;
-            for (var i = 0; i < packet.Length - 1; i++)
-            {
-                bcc ^= packet[i];
-            }
-
-            packet[packet.Length - 1] = bcc;
+            packet[packet.Length - 1] = ComputeDetectorBcc(packet, packet.Length - 1);
             return packet;
         }
 
@@ -1698,7 +1763,7 @@ namespace ConsoleApp6
             }
 
             _serialService.SendBytes(frame);
-            Log($"G6T ({_serialService.PortName}) TX: " + ToHex(frame));
+            LogFrame("G6T TX", _serialService.PortName, frame);
             Log($"G6T ({_serialService.PortName}) wait cmd=0x{command:X2} timeout={timeout}ms");
 
             var completedTask = await Task.WhenAny(tcs.Task, Task.Delay(timeout));
@@ -1810,7 +1875,7 @@ namespace ConsoleApp6
 
         private void HandleG6tFrame(byte[] frame, string portName)
         {
-            Log($"G6T ({portName}) RX: " + ToHex(frame));
+            LogFrame("G6T RX", portName, frame);
 
             if (frame.Length < 8 || frame[4] != 0x01)
             {
@@ -1849,7 +1914,7 @@ namespace ConsoleApp6
             var station = GetSelectedStation();
             var serial = txtSerial.Text.Trim();
             var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            var path = Path.Combine(@"E:\Work\C#\New folder\.vs\ConsoleApp6", "result.txt");
+            var path = Path.Combine(@"D:\New folder\FCT-G6T\FCT-G6T", "result.txt");
 
             using (var writer = new StreamWriter(path, append: true))
             {
