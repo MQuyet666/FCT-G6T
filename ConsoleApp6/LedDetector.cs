@@ -15,7 +15,7 @@ namespace ConsoleApp6
             Cyan
         }
 
-        public Rect Roi { get; set; } = new Rect(1550, 1100, 200, 200);
+        public Rect Roi { get; set; } = new Rect(1550, 1100, 200, 200); // Rect(1550, 1100, 200, 200);
         public Rect Roi2 { get; set; } = new Rect(1550, 1500, 600, 600);
         public Rect Roi3 { get; set; } = new Rect(1550, 1500, 1000, 1000);
         public bool UseMultipleRois { get; set; }

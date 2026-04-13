@@ -61,499 +61,539 @@ namespace ConsoleApp6
 
         private void InitializeComponent()
         {
-            this.splitMain = new SplitContainer();
-            this.picCamera = new PictureBox();
-            this.pnlLedStatus = new Panel();
-            this.pnlStartResult = new Panel();
-            this.lblStartResult = new Label();
-            this.btnStart = new Button();
-            this.grpLog = new GroupBox();
-            this.txtLog = new RichTextBox();
-            this.btnClearLog = new Button();
-            this.lblSerial = new Label();
-            this.txtSerial = new TextBox();
-            this.lblQrCom = new Label();
-            this.cmbQrComPort = new ComboBox();
-            this.btnQrConnect = new Button();
-            this.lblDetectorCom = new Label();
-            this.cmbDetectorComPort = new ComboBox();
-            this.btnDetectorConnect = new Button();
-            this.grpTests = new GroupBox();
-            this.lblLedTestTitle = new Label();
-            this.pnlLedTestResult = new Panel();
-            this.lblLedTestResult = new Label();
-            this.lblButtonTestTitle = new Label();
-            this.pnlButtonTestResult = new Panel();
-            this.lblButtonTestResult = new Label();
-            this.lblRssiTestTitle = new Label();
-            this.pnlRssiTestResult = new Panel();
-            this.lblRssiTestResult = new Label();
-            this.lblReadValueTestTitle = new Label();
-            this.pnlReadValueTestResult = new Panel();
-            this.lblReadValueTestResult = new Label();
-            this.lblWdiTestTitle = new Label();
-            this.pnlWdiTestResult = new Panel();
-            this.lblWdiTestResult = new Label();
-            this.lblMainCom = new Label();
-            this.cmbComPort = new ComboBox();
-            this.btnConnect = new Button();
-            this.rdoSmokeDetector = new RadioButton();
-            this.rdoHeatDetector = new RadioButton();
-            this.rdoPushButton = new RadioButton();
-            this.rdoHornStrobe = new RadioButton();
-            ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
-            this.splitMain.Panel1.SuspendLayout();
-            this.splitMain.Panel2.SuspendLayout();
-            this.splitMain.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picCamera)).BeginInit();
-            this.grpLog.SuspendLayout();
-            this.grpTests.SuspendLayout();
-            this.SuspendLayout();
+            splitMain = new SplitContainer();
+            btnStart = new Button();
+            pnlStartResult = new Panel();
+            lblStartResult = new Label();
+            pnlLedStatus = new Panel();
+            picCamera = new PictureBox();
+            btnConnect = new Button();
+            cmbComPort = new ComboBox();
+            lblMainCom = new Label();
+            rdoPushButton = new RadioButton();
+            rdoHornStrobe = new RadioButton();
+            rdoHeatDetector = new RadioButton();
+            rdoSmokeDetector = new RadioButton();
+            grpTests = new GroupBox();
+            pnlWdiTestResult = new Panel();
+            lblWdiTestResult = new Label();
+            lblWdiTestTitle = new Label();
+            pnlReadValueTestResult = new Panel();
+            lblReadValueTestResult = new Label();
+            lblReadValueTestTitle = new Label();
+            pnlRssiTestResult = new Panel();
+            lblRssiTestResult = new Label();
+            lblRssiTestTitle = new Label();
+            pnlButtonTestResult = new Panel();
+            lblButtonTestResult = new Label();
+            lblButtonTestTitle = new Label();
+            pnlLedTestResult = new Panel();
+            lblLedTestResult = new Label();
+            lblLedTestTitle = new Label();
+            btnDetectorConnect = new Button();
+            cmbDetectorComPort = new ComboBox();
+            lblDetectorCom = new Label();
+            btnQrConnect = new Button();
+            cmbQrComPort = new ComboBox();
+            lblQrCom = new Label();
+            txtSerial = new TextBox();
+            lblSerial = new Label();
+            grpLog = new GroupBox();
+            btnClearLog = new Button();
+            txtLog = new RichTextBox();
+            ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
+            splitMain.Panel1.SuspendLayout();
+            splitMain.Panel2.SuspendLayout();
+            splitMain.SuspendLayout();
+            pnlStartResult.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picCamera).BeginInit();
+            grpTests.SuspendLayout();
+            pnlWdiTestResult.SuspendLayout();
+            pnlReadValueTestResult.SuspendLayout();
+            pnlRssiTestResult.SuspendLayout();
+            pnlButtonTestResult.SuspendLayout();
+            pnlLedTestResult.SuspendLayout();
+            grpLog.SuspendLayout();
+            SuspendLayout();
             // 
             // splitMain
             // 
-            this.splitMain.Dock = DockStyle.Fill;
-            this.splitMain.Location = new System.Drawing.Point(0, 0);
-            this.splitMain.Name = "splitMain";
+            splitMain.Dock = DockStyle.Fill;
+            splitMain.Location = new Point(0, 0);
+            splitMain.Margin = new Padding(3, 4, 3, 4);
+            splitMain.Name = "splitMain";
             // 
             // splitMain.Panel1
             // 
-            this.splitMain.Panel1.Controls.Add(this.btnStart);
-            this.splitMain.Panel1.Controls.Add(this.pnlStartResult);
-            this.splitMain.Panel1.Controls.Add(this.pnlLedStatus);
-            this.splitMain.Panel1.Controls.Add(this.picCamera);
+            splitMain.Panel1.Controls.Add(btnStart);
+            splitMain.Panel1.Controls.Add(pnlStartResult);
+            splitMain.Panel1.Controls.Add(pnlLedStatus);
+            splitMain.Panel1.Controls.Add(picCamera);
             // 
             // splitMain.Panel2
             // 
-            this.splitMain.Panel2.Controls.Add(this.btnConnect);
-            this.splitMain.Panel2.Controls.Add(this.cmbComPort);
-            this.splitMain.Panel2.Controls.Add(this.lblMainCom);
-            this.splitMain.Panel2.Controls.Add(this.rdoPushButton);
-            this.splitMain.Panel2.Controls.Add(this.rdoHornStrobe);
-            this.splitMain.Panel2.Controls.Add(this.rdoHeatDetector);
-            this.splitMain.Panel2.Controls.Add(this.rdoSmokeDetector);
-            this.splitMain.Panel2.Controls.Add(this.grpTests);
-            this.splitMain.Panel2.Controls.Add(this.btnDetectorConnect);
-            this.splitMain.Panel2.Controls.Add(this.cmbDetectorComPort);
-            this.splitMain.Panel2.Controls.Add(this.lblDetectorCom);
-            this.splitMain.Panel2.Controls.Add(this.btnQrConnect);
-            this.splitMain.Panel2.Controls.Add(this.cmbQrComPort);
-            this.splitMain.Panel2.Controls.Add(this.lblQrCom);
-            this.splitMain.Panel2.Controls.Add(this.txtSerial);
-            this.splitMain.Panel2.Controls.Add(this.lblSerial);
-            this.splitMain.Panel2.Controls.Add(this.grpLog);
-            this.splitMain.Size = new System.Drawing.Size(1184, 661);
-            this.splitMain.SplitterDistance = 670;
-            this.splitMain.TabIndex = 0;
-            // 
-            // picCamera
-            // 
-            this.picCamera.BorderStyle = BorderStyle.FixedSingle;
-            this.picCamera.Location = new System.Drawing.Point(12, 12);
-            this.picCamera.Name = "picCamera";
-            this.picCamera.Size = new System.Drawing.Size(646, 482);
-            this.picCamera.SizeMode = PictureBoxSizeMode.Zoom;
-            this.picCamera.TabIndex = 0;
-            this.picCamera.TabStop = false;
-            // 
-            // pnlLedStatus
-            // 
-            this.pnlLedStatus.BackColor = System.Drawing.Color.DarkRed;
-            this.pnlLedStatus.BorderStyle = BorderStyle.FixedSingle;
-            this.pnlLedStatus.Location = new System.Drawing.Point(12, 520);
-            this.pnlLedStatus.Name = "pnlLedStatus";
-            this.pnlLedStatus.Size = new System.Drawing.Size(40, 40);
-            this.pnlLedStatus.TabIndex = 1;
-            // 
-            // pnlStartResult
-            // 
-            this.pnlStartResult.BackColor = System.Drawing.Color.DimGray;
-            this.pnlStartResult.BorderStyle = BorderStyle.FixedSingle;
-            this.pnlStartResult.Controls.Add(this.lblStartResult);
-            this.pnlStartResult.Location = new System.Drawing.Point(90, 509);
-            this.pnlStartResult.Name = "pnlStartResult";
-            this.pnlStartResult.Size = new System.Drawing.Size(570, 62);
-            this.pnlStartResult.TabIndex = 2;
-            // 
-            // lblStartResult
-            // 
-            this.lblStartResult.Dock = DockStyle.Fill;
-            this.lblStartResult.ForeColor = System.Drawing.Color.White;
-            this.lblStartResult.Location = new System.Drawing.Point(0, 0);
-            this.lblStartResult.Name = "lblStartResult";
-            this.lblStartResult.Size = new System.Drawing.Size(176, 60);
-            this.lblStartResult.TabIndex = 0;
-            this.lblStartResult.Text = "Result";
-            this.lblStartResult.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            splitMain.Panel2.Controls.Add(btnConnect);
+            splitMain.Panel2.Controls.Add(cmbComPort);
+            splitMain.Panel2.Controls.Add(lblMainCom);
+            splitMain.Panel2.Controls.Add(rdoPushButton);
+            splitMain.Panel2.Controls.Add(rdoHornStrobe);
+            splitMain.Panel2.Controls.Add(rdoHeatDetector);
+            splitMain.Panel2.Controls.Add(rdoSmokeDetector);
+            splitMain.Panel2.Controls.Add(grpTests);
+            splitMain.Panel2.Controls.Add(btnDetectorConnect);
+            splitMain.Panel2.Controls.Add(cmbDetectorComPort);
+            splitMain.Panel2.Controls.Add(lblDetectorCom);
+            splitMain.Panel2.Controls.Add(btnQrConnect);
+            splitMain.Panel2.Controls.Add(cmbQrComPort);
+            splitMain.Panel2.Controls.Add(lblQrCom);
+            splitMain.Panel2.Controls.Add(txtSerial);
+            splitMain.Panel2.Controls.Add(lblSerial);
+            splitMain.Panel2.Controls.Add(grpLog);
+            splitMain.Size = new Size(1316, 826);
+            splitMain.SplitterDistance = 744;
+            splitMain.TabIndex = 0;
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(180, 581);
-            this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(310, 55);
-            this.btnStart.TabIndex = 3;
-            this.btnStart.Text = "Start";
-            this.btnStart.UseVisualStyleBackColor = true;
+            btnStart.Location = new Point(200, 726);
+            btnStart.Margin = new Padding(3, 4, 3, 4);
+            btnStart.Name = "btnStart";
+            btnStart.Size = new Size(344, 69);
+            btnStart.TabIndex = 3;
+            btnStart.Text = "Start";
+            btnStart.UseVisualStyleBackColor = true;
             // 
-            // grpLog
+            // pnlStartResult
             // 
-            this.grpLog.Controls.Add(this.btnClearLog);
-            this.grpLog.Controls.Add(this.txtLog);
-            this.grpLog.Location = new System.Drawing.Point(13, 387);
-            this.grpLog.Name = "grpLog";
-            this.grpLog.Size = new System.Drawing.Size(485, 262);
-            this.grpLog.TabIndex = 0;
-            this.grpLog.TabStop = false;
-            this.grpLog.Text = "Log";
+            pnlStartResult.BackColor = Color.DimGray;
+            pnlStartResult.BorderStyle = BorderStyle.FixedSingle;
+            pnlStartResult.Controls.Add(lblStartResult);
+            pnlStartResult.Location = new Point(100, 636);
+            pnlStartResult.Margin = new Padding(3, 4, 3, 4);
+            pnlStartResult.Name = "pnlStartResult";
+            pnlStartResult.Size = new Size(633, 77);
+            pnlStartResult.TabIndex = 2;
             // 
-            // txtLog
+            // lblStartResult
             // 
-            this.txtLog.Location = new System.Drawing.Point(7, 27);
-            this.txtLog.Name = "txtLog";
-            this.txtLog.ReadOnly = true;
-            this.txtLog.Size = new System.Drawing.Size(470, 193);
-            this.txtLog.TabIndex = 0;
-            this.txtLog.Text = "";
+            lblStartResult.Dock = DockStyle.Fill;
+            lblStartResult.ForeColor = Color.White;
+            lblStartResult.Location = new Point(0, 0);
+            lblStartResult.Name = "lblStartResult";
+            lblStartResult.Size = new Size(631, 75);
+            lblStartResult.TabIndex = 0;
+            lblStartResult.Text = "Result";
+            lblStartResult.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // btnClearLog
+            // pnlLedStatus
             // 
-            this.btnClearLog.Location = new System.Drawing.Point(367, 226);
-            this.btnClearLog.Name = "btnClearLog";
-            this.btnClearLog.Size = new System.Drawing.Size(110, 30);
-            this.btnClearLog.TabIndex = 1;
-            this.btnClearLog.Text = "Clear Log";
-            this.btnClearLog.UseVisualStyleBackColor = true;
+            pnlLedStatus.BackColor = Color.DarkRed;
+            pnlLedStatus.BorderStyle = BorderStyle.FixedSingle;
+            pnlLedStatus.Location = new Point(13, 650);
+            pnlLedStatus.Margin = new Padding(3, 4, 3, 4);
+            pnlLedStatus.Name = "pnlLedStatus";
+            pnlLedStatus.Size = new Size(44, 50);
+            pnlLedStatus.TabIndex = 1;
             // 
-            // lblSerial
+            // picCamera
             // 
-            this.lblSerial.AutoSize = true;
-            this.lblSerial.Location = new System.Drawing.Point(13, 173);
-            this.lblSerial.Name = "lblSerial";
-            this.lblSerial.Size = new System.Drawing.Size(53, 20);
-            this.lblSerial.TabIndex = 1;
-            this.lblSerial.Text = "Serial:";
-            // 
-            // txtSerial
-            // 
-            this.txtSerial.Location = new System.Drawing.Point(72, 170);
-            this.txtSerial.Name = "txtSerial";
-            this.txtSerial.Size = new System.Drawing.Size(426, 26);
-            this.txtSerial.TabIndex = 2;
-            // 
-            // lblQrCom
-            // 
-            this.lblQrCom.AutoSize = true;
-            this.lblQrCom.Location = new System.Drawing.Point(13, 17);
-            this.lblQrCom.Name = "lblQrCom";
-            this.lblQrCom.Size = new System.Drawing.Size(71, 20);
-            this.lblQrCom.TabIndex = 3;
-            this.lblQrCom.Text = "QR COM:";
-            // 
-            // cmbQrComPort
-            // 
-            this.cmbQrComPort.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.cmbQrComPort.FormattingEnabled = true;
-            this.cmbQrComPort.Location = new System.Drawing.Point(90, 14);
-            this.cmbQrComPort.Name = "cmbQrComPort";
-            this.cmbQrComPort.Size = new System.Drawing.Size(150, 28);
-            this.cmbQrComPort.TabIndex = 4;
-            // 
-            // btnQrConnect
-            // 
-            this.btnQrConnect.Location = new System.Drawing.Point(246, 12);
-            this.btnQrConnect.Name = "btnQrConnect";
-            this.btnQrConnect.Size = new System.Drawing.Size(110, 32);
-            this.btnQrConnect.TabIndex = 5;
-            this.btnQrConnect.Text = "QR Connect";
-            this.btnQrConnect.UseVisualStyleBackColor = true;
-            // 
-            // lblDetectorCom
-            // 
-            this.lblDetectorCom.AutoSize = true;
-            this.lblDetectorCom.Location = new System.Drawing.Point(13, 52);
-            this.lblDetectorCom.Name = "lblDetectorCom";
-            this.lblDetectorCom.Size = new System.Drawing.Size(80, 20);
-            this.lblDetectorCom.TabIndex = 6;
-            this.lblDetectorCom.Text = "DT COM:";
-            // 
-            // cmbDetectorComPort
-            // 
-            this.cmbDetectorComPort.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.cmbDetectorComPort.FormattingEnabled = true;
-            this.cmbDetectorComPort.Location = new System.Drawing.Point(90, 49);
-            this.cmbDetectorComPort.Name = "cmbDetectorComPort";
-            this.cmbDetectorComPort.Size = new System.Drawing.Size(150, 28);
-            this.cmbDetectorComPort.TabIndex = 7;
-            // 
-            // btnDetectorConnect
-            // 
-            this.btnDetectorConnect.Location = new System.Drawing.Point(246, 47);
-            this.btnDetectorConnect.Name = "btnDetectorConnect";
-            this.btnDetectorConnect.Size = new System.Drawing.Size(110, 32);
-            this.btnDetectorConnect.TabIndex = 8;
-            this.btnDetectorConnect.Text = "DT Connect";
-            this.btnDetectorConnect.UseVisualStyleBackColor = true;
-            // 
-            // grpTests
-            // 
-            this.grpTests.Controls.Add(this.pnlWdiTestResult);
-            this.grpTests.Controls.Add(this.lblWdiTestTitle);
-            this.grpTests.Controls.Add(this.pnlReadValueTestResult);
-            this.grpTests.Controls.Add(this.lblReadValueTestTitle);
-            this.grpTests.Controls.Add(this.pnlRssiTestResult);
-            this.grpTests.Controls.Add(this.lblRssiTestTitle);
-            this.grpTests.Controls.Add(this.pnlButtonTestResult);
-            this.grpTests.Controls.Add(this.lblButtonTestTitle);
-            this.grpTests.Controls.Add(this.pnlLedTestResult);
-            this.grpTests.Controls.Add(this.lblLedTestTitle);
-            this.grpTests.Location = new System.Drawing.Point(13, 205);
-            this.grpTests.Name = "grpTests";
-            this.grpTests.Size = new System.Drawing.Size(485, 176);
-            this.grpTests.TabIndex = 3;
-            this.grpTests.TabStop = false;
-            this.grpTests.Text = "Test Results";
-            // 
-            // lblLedTestTitle
-            // 
-            this.lblLedTestTitle.AutoSize = true;
-            this.lblLedTestTitle.Location = new System.Drawing.Point(16, 33);
-            this.lblLedTestTitle.Name = "lblLedTestTitle";
-            this.lblLedTestTitle.Size = new System.Drawing.Size(71, 20);
-            this.lblLedTestTitle.TabIndex = 0;
-            this.lblLedTestTitle.Text = "1. LED Test";
-            // 
-            // pnlLedTestResult
-            // 
-            this.pnlLedTestResult.BackColor = System.Drawing.Color.DimGray;
-            this.pnlLedTestResult.BorderStyle = BorderStyle.FixedSingle;
-            this.pnlLedTestResult.Controls.Add(this.lblLedTestResult);
-            this.pnlLedTestResult.Location = new System.Drawing.Point(200, 31);
-            this.pnlLedTestResult.Name = "pnlLedTestResult";
-            this.pnlLedTestResult.Size = new System.Drawing.Size(22, 22);
-            this.pnlLedTestResult.TabIndex = 1;
-            // 
-            // lblLedTestResult
-            // 
-            this.lblLedTestResult.Dock = DockStyle.Fill;
-            this.lblLedTestResult.ForeColor = System.Drawing.Color.White;
-            this.lblLedTestResult.Location = new System.Drawing.Point(0, 0);
-            this.lblLedTestResult.Name = "lblLedTestResult";
-            this.lblLedTestResult.Size = new System.Drawing.Size(98, 26);
-            this.lblLedTestResult.TabIndex = 0;
-            this.lblLedTestResult.Text = "WAIT";
-            this.lblLedTestResult.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblButtonTestTitle
-            // 
-            this.lblButtonTestTitle.AutoSize = true;
-            this.lblButtonTestTitle.Location = new System.Drawing.Point(16, 90);
-            this.lblButtonTestTitle.Name = "lblButtonTestTitle";
-            this.lblButtonTestTitle.Size = new System.Drawing.Size(89, 20);
-            this.lblButtonTestTitle.TabIndex = 2;
-            this.lblButtonTestTitle.Text = "2. Button Test";
-            // 
-            // pnlButtonTestResult
-            // 
-            this.pnlButtonTestResult.BackColor = System.Drawing.Color.DimGray;
-            this.pnlButtonTestResult.BorderStyle = BorderStyle.FixedSingle;
-            this.pnlButtonTestResult.Controls.Add(this.lblButtonTestResult);
-            this.pnlButtonTestResult.Location = new System.Drawing.Point(200, 90);
-            this.pnlButtonTestResult.Name = "pnlButtonTestResult";
-            this.pnlButtonTestResult.Size = new System.Drawing.Size(22, 22);
-            this.pnlButtonTestResult.TabIndex = 3;
-            // 
-            // lblButtonTestResult
-            // 
-            this.lblButtonTestResult.Dock = DockStyle.Fill;
-            this.lblButtonTestResult.ForeColor = System.Drawing.Color.White;
-            this.lblButtonTestResult.Location = new System.Drawing.Point(0, 0);
-            this.lblButtonTestResult.Name = "lblButtonTestResult";
-            this.lblButtonTestResult.Size = new System.Drawing.Size(98, 26);
-            this.lblButtonTestResult.TabIndex = 0;
-            this.lblButtonTestResult.Text = "WAIT";
-            this.lblButtonTestResult.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblRssiTestTitle
-            // 
-            this.lblRssiTestTitle.AutoSize = true;
-            this.lblRssiTestTitle.Location = new System.Drawing.Point(16, 147);
-            this.lblRssiTestTitle.Name = "lblRssiTestTitle";
-            this.lblRssiTestTitle.Size = new System.Drawing.Size(73, 20);
-            this.lblRssiTestTitle.TabIndex = 4;
-            this.lblRssiTestTitle.Text = "3. Lora Test";
-            // 
-            // pnlRssiTestResult
-            // 
-            this.pnlRssiTestResult.BackColor = System.Drawing.Color.DimGray;
-            this.pnlRssiTestResult.BorderStyle = BorderStyle.FixedSingle;
-            this.pnlRssiTestResult.Controls.Add(this.lblRssiTestResult);
-            this.pnlRssiTestResult.Location = new System.Drawing.Point(200, 145);
-            this.pnlRssiTestResult.Name = "pnlRssiTestResult";
-            this.pnlRssiTestResult.Size = new System.Drawing.Size(22, 22);
-            this.pnlRssiTestResult.TabIndex = 5;
-            // 
-            // lblRssiTestResult
-            // 
-            this.lblRssiTestResult.Dock = DockStyle.Fill;
-            this.lblRssiTestResult.ForeColor = System.Drawing.Color.White;
-            this.lblRssiTestResult.Location = new System.Drawing.Point(0, 0);
-            this.lblRssiTestResult.Name = "lblRssiTestResult";
-            this.lblRssiTestResult.Size = new System.Drawing.Size(98, 26);
-            this.lblRssiTestResult.TabIndex = 0;
-            this.lblRssiTestResult.Text = "WAIT";
-            this.lblRssiTestResult.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblReadValueTestTitle
-            // 
-            this.lblReadValueTestTitle.AutoSize = true;
-            this.lblReadValueTestTitle.Location = new System.Drawing.Point(250, 33);
-            this.lblReadValueTestTitle.Name = "lblReadValueTestTitle";
-            this.lblReadValueTestTitle.Size = new System.Drawing.Size(116, 20);
-            this.lblReadValueTestTitle.TabIndex = 6;
-            this.lblReadValueTestTitle.Text = "4. Read Value Test";
-            // 
-            // pnlReadValueTestResult
-            // 
-            this.pnlReadValueTestResult.BackColor = System.Drawing.Color.DimGray;
-            this.pnlReadValueTestResult.BorderStyle = BorderStyle.FixedSingle;
-            this.pnlReadValueTestResult.Controls.Add(this.lblReadValueTestResult);
-            this.pnlReadValueTestResult.Location = new System.Drawing.Point(448, 31);
-            this.pnlReadValueTestResult.Name = "pnlReadValueTestResult";
-            this.pnlReadValueTestResult.Size = new System.Drawing.Size(22, 22);
-            this.pnlReadValueTestResult.TabIndex = 7;
-            // 
-            // lblReadValueTestResult
-            // 
-            this.lblReadValueTestResult.Dock = DockStyle.Fill;
-            this.lblReadValueTestResult.ForeColor = System.Drawing.Color.White;
-            this.lblReadValueTestResult.Location = new System.Drawing.Point(0, 0);
-            this.lblReadValueTestResult.Name = "lblReadValueTestResult";
-            this.lblReadValueTestResult.Size = new System.Drawing.Size(98, 26);
-            this.lblReadValueTestResult.TabIndex = 0;
-            this.lblReadValueTestResult.Text = "WAIT";
-            this.lblReadValueTestResult.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblWdiTestTitle
-            // 
-            this.lblWdiTestTitle.AutoSize = true;
-            this.lblWdiTestTitle.Location = new System.Drawing.Point(250, 90);
-            this.lblWdiTestTitle.Name = "lblWdiTestTitle";
-            this.lblWdiTestTitle.Size = new System.Drawing.Size(72, 20);
-            this.lblWdiTestTitle.TabIndex = 8;
-            this.lblWdiTestTitle.Text = "5. WDI Test";
-            // 
-            // pnlWdiTestResult
-            // 
-            this.pnlWdiTestResult.BackColor = System.Drawing.Color.DimGray;
-            this.pnlWdiTestResult.BorderStyle = BorderStyle.FixedSingle;
-            this.pnlWdiTestResult.Controls.Add(this.lblWdiTestResult);
-            this.pnlWdiTestResult.Location = new System.Drawing.Point(448, 90);
-            this.pnlWdiTestResult.Name = "pnlWdiTestResult";
-            this.pnlWdiTestResult.Size = new System.Drawing.Size(22, 22);
-            this.pnlWdiTestResult.TabIndex = 9;
-            // 
-            // lblWdiTestResult
-            // 
-            this.lblWdiTestResult.Dock = DockStyle.Fill;
-            this.lblWdiTestResult.ForeColor = System.Drawing.Color.White;
-            this.lblWdiTestResult.Location = new System.Drawing.Point(0, 0);
-            this.lblWdiTestResult.Name = "lblWdiTestResult";
-            this.lblWdiTestResult.Size = new System.Drawing.Size(98, 26);
-            this.lblWdiTestResult.TabIndex = 0;
-            this.lblWdiTestResult.Text = "WAIT";
-            this.lblWdiTestResult.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblMainCom
-            // 
-            this.lblMainCom.AutoSize = true;
-            this.lblMainCom.Location = new System.Drawing.Point(13, 87);
-            this.lblMainCom.Name = "lblMainCom";
-            this.lblMainCom.Size = new System.Drawing.Size(79, 20);
-            this.lblMainCom.TabIndex = 9;
-            this.lblMainCom.Text = "G6T COM:";
-            // 
-            // cmbComPort
-            // 
-            this.cmbComPort.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.cmbComPort.FormattingEnabled = true;
-            this.cmbComPort.Location = new System.Drawing.Point(90, 84);
-            this.cmbComPort.Name = "cmbComPort";
-            this.cmbComPort.Size = new System.Drawing.Size(150, 28);
-            this.cmbComPort.TabIndex = 10;
+            picCamera.BorderStyle = BorderStyle.FixedSingle;
+            picCamera.Location = new Point(13, 15);
+            picCamera.Margin = new Padding(3, 4, 3, 4);
+            picCamera.Name = "picCamera";
+            picCamera.Size = new Size(718, 602);
+            picCamera.SizeMode = PictureBoxSizeMode.Zoom;
+            picCamera.TabIndex = 0;
+            picCamera.TabStop = false;
             // 
             // btnConnect
             // 
-            this.btnConnect.Location = new System.Drawing.Point(246, 82);
-            this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(110, 32);
-            this.btnConnect.TabIndex = 11;
-            this.btnConnect.Text = "G6T Connect";
-            this.btnConnect.UseVisualStyleBackColor = true;
+            btnConnect.Location = new Point(273, 102);
+            btnConnect.Margin = new Padding(3, 4, 3, 4);
+            btnConnect.Name = "btnConnect";
+            btnConnect.Size = new Size(122, 40);
+            btnConnect.TabIndex = 11;
+            btnConnect.Text = "G6T Connect";
+            btnConnect.UseVisualStyleBackColor = true;
             // 
-            // rdoSmokeDetector
+            // cmbComPort
             // 
-            this.rdoSmokeDetector.AutoSize = true;
-            this.rdoSmokeDetector.Checked = true;
-            this.rdoSmokeDetector.Location = new System.Drawing.Point(17, 125);
-            this.rdoSmokeDetector.Name = "rdoSmokeDetector";
-            this.rdoSmokeDetector.Size = new System.Drawing.Size(137, 24);
-            this.rdoSmokeDetector.TabIndex = 12;
-            this.rdoSmokeDetector.TabStop = true;
-            this.rdoSmokeDetector.Text = "Đầu báo khói";
-            this.rdoSmokeDetector.UseVisualStyleBackColor = true;
+            cmbComPort.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbComPort.FormattingEnabled = true;
+            cmbComPort.Location = new Point(100, 105);
+            cmbComPort.Margin = new Padding(3, 4, 3, 4);
+            cmbComPort.Name = "cmbComPort";
+            cmbComPort.Size = new Size(166, 33);
+            cmbComPort.TabIndex = 10;
             // 
-            // rdoHeatDetector
+            // lblMainCom
             // 
-            this.rdoHeatDetector.AutoSize = true;
-            this.rdoHeatDetector.Location = new System.Drawing.Point(140, 125);
-            this.rdoHeatDetector.Name = "rdoHeatDetector";
-            this.rdoHeatDetector.Size = new System.Drawing.Size(143, 24);
-            this.rdoHeatDetector.TabIndex = 13;
-            this.rdoHeatDetector.Text = "Đầu báo nhiệt";
-            this.rdoHeatDetector.UseVisualStyleBackColor = true;
+            lblMainCom.AutoSize = true;
+            lblMainCom.Location = new Point(14, 109);
+            lblMainCom.Name = "lblMainCom";
+            lblMainCom.Size = new Size(93, 25);
+            lblMainCom.TabIndex = 9;
+            lblMainCom.Text = "G6T COM:";
             // 
             // rdoPushButton
             // 
-            this.rdoPushButton.AutoSize = true;
-            this.rdoPushButton.Location = new System.Drawing.Point(280, 125);
-            this.rdoPushButton.Name = "rdoPushButton";
-            this.rdoPushButton.Size = new System.Drawing.Size(111, 24);
-            this.rdoPushButton.TabIndex = 14;
-            this.rdoPushButton.Text = "Nút nhấn";
-            this.rdoPushButton.UseVisualStyleBackColor = true;
+            rdoPushButton.AutoSize = true;
+            rdoPushButton.Location = new Point(311, 156);
+            rdoPushButton.Margin = new Padding(3, 4, 3, 4);
+            rdoPushButton.Name = "rdoPushButton";
+            rdoPushButton.Size = new Size(110, 29);
+            rdoPushButton.TabIndex = 14;
+            rdoPushButton.Text = "Nút nhấn";
+            rdoPushButton.UseVisualStyleBackColor = true;
+            rdoPushButton.CheckedChanged += rdoPushButton_CheckedChanged;
             // 
             // rdoHornStrobe
             // 
-            this.rdoHornStrobe.AutoSize = true;
-            this.rdoHornStrobe.Location = new System.Drawing.Point(390, 125);
-            this.rdoHornStrobe.Name = "rdoHornStrobe";
-            this.rdoHornStrobe.Size = new System.Drawing.Size(99, 24);
-            this.rdoHornStrobe.TabIndex = 15;
-            this.rdoHornStrobe.Text = "Chuông đèn";
-            this.rdoHornStrobe.UseVisualStyleBackColor = true;
+            rdoHornStrobe.AutoSize = true;
+            rdoHornStrobe.Location = new Point(433, 156);
+            rdoHornStrobe.Margin = new Padding(3, 4, 3, 4);
+            rdoHornStrobe.Name = "rdoHornStrobe";
+            rdoHornStrobe.Size = new Size(135, 29);
+            rdoHornStrobe.TabIndex = 15;
+            rdoHornStrobe.Text = "Chuông đèn";
+            rdoHornStrobe.UseVisualStyleBackColor = true;
+            // 
+            // rdoHeatDetector
+            // 
+            rdoHeatDetector.AutoSize = true;
+            rdoHeatDetector.Location = new Point(156, 156);
+            rdoHeatDetector.Margin = new Padding(3, 4, 3, 4);
+            rdoHeatDetector.Name = "rdoHeatDetector";
+            rdoHeatDetector.Size = new Size(149, 29);
+            rdoHeatDetector.TabIndex = 13;
+            rdoHeatDetector.Text = "Đầu báo nhiệt";
+            rdoHeatDetector.UseVisualStyleBackColor = true;
+            // 
+            // rdoSmokeDetector
+            // 
+            rdoSmokeDetector.AutoSize = true;
+            rdoSmokeDetector.Checked = true;
+            rdoSmokeDetector.Location = new Point(19, 156);
+            rdoSmokeDetector.Margin = new Padding(3, 4, 3, 4);
+            rdoSmokeDetector.Name = "rdoSmokeDetector";
+            rdoSmokeDetector.Size = new Size(144, 29);
+            rdoSmokeDetector.TabIndex = 12;
+            rdoSmokeDetector.TabStop = true;
+            rdoSmokeDetector.Text = "Đầu báo khói";
+            rdoSmokeDetector.UseVisualStyleBackColor = true;
+            // 
+            // grpTests
+            // 
+            grpTests.Controls.Add(pnlWdiTestResult);
+            grpTests.Controls.Add(lblWdiTestTitle);
+            grpTests.Controls.Add(pnlReadValueTestResult);
+            grpTests.Controls.Add(lblReadValueTestTitle);
+            grpTests.Controls.Add(pnlRssiTestResult);
+            grpTests.Controls.Add(lblRssiTestTitle);
+            grpTests.Controls.Add(pnlButtonTestResult);
+            grpTests.Controls.Add(lblButtonTestTitle);
+            grpTests.Controls.Add(pnlLedTestResult);
+            grpTests.Controls.Add(lblLedTestTitle);
+            grpTests.Location = new Point(14, 256);
+            grpTests.Margin = new Padding(3, 4, 3, 4);
+            grpTests.Name = "grpTests";
+            grpTests.Padding = new Padding(3, 4, 3, 4);
+            grpTests.Size = new Size(539, 220);
+            grpTests.TabIndex = 3;
+            grpTests.TabStop = false;
+            grpTests.Text = "Test Results";
+            // 
+            // pnlWdiTestResult
+            // 
+            pnlWdiTestResult.BackColor = Color.DimGray;
+            pnlWdiTestResult.BorderStyle = BorderStyle.FixedSingle;
+            pnlWdiTestResult.Controls.Add(lblWdiTestResult);
+            pnlWdiTestResult.Location = new Point(498, 112);
+            pnlWdiTestResult.Margin = new Padding(3, 4, 3, 4);
+            pnlWdiTestResult.Name = "pnlWdiTestResult";
+            pnlWdiTestResult.Size = new Size(24, 27);
+            pnlWdiTestResult.TabIndex = 9;
+            // 
+            // lblWdiTestResult
+            // 
+            lblWdiTestResult.Dock = DockStyle.Fill;
+            lblWdiTestResult.ForeColor = Color.White;
+            lblWdiTestResult.Location = new Point(0, 0);
+            lblWdiTestResult.Name = "lblWdiTestResult";
+            lblWdiTestResult.Size = new Size(22, 25);
+            lblWdiTestResult.TabIndex = 0;
+            lblWdiTestResult.Text = "WAIT";
+            lblWdiTestResult.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // lblWdiTestTitle
+            // 
+            lblWdiTestTitle.AutoSize = true;
+            lblWdiTestTitle.Location = new Point(278, 112);
+            lblWdiTestTitle.Name = "lblWdiTestTitle";
+            lblWdiTestTitle.Size = new Size(101, 25);
+            lblWdiTestTitle.TabIndex = 8;
+            lblWdiTestTitle.Text = "5. WDI Test";
+            // 
+            // pnlReadValueTestResult
+            // 
+            pnlReadValueTestResult.BackColor = Color.DimGray;
+            pnlReadValueTestResult.BorderStyle = BorderStyle.FixedSingle;
+            pnlReadValueTestResult.Controls.Add(lblReadValueTestResult);
+            pnlReadValueTestResult.Location = new Point(498, 39);
+            pnlReadValueTestResult.Margin = new Padding(3, 4, 3, 4);
+            pnlReadValueTestResult.Name = "pnlReadValueTestResult";
+            pnlReadValueTestResult.Size = new Size(24, 27);
+            pnlReadValueTestResult.TabIndex = 7;
+            // 
+            // lblReadValueTestResult
+            // 
+            lblReadValueTestResult.Dock = DockStyle.Fill;
+            lblReadValueTestResult.ForeColor = Color.White;
+            lblReadValueTestResult.Location = new Point(0, 0);
+            lblReadValueTestResult.Name = "lblReadValueTestResult";
+            lblReadValueTestResult.Size = new Size(22, 25);
+            lblReadValueTestResult.TabIndex = 0;
+            lblReadValueTestResult.Text = "WAIT";
+            lblReadValueTestResult.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // lblReadValueTestTitle
+            // 
+            lblReadValueTestTitle.AutoSize = true;
+            lblReadValueTestTitle.Location = new Point(278, 41);
+            lblReadValueTestTitle.Name = "lblReadValueTestTitle";
+            lblReadValueTestTitle.Size = new Size(152, 25);
+            lblReadValueTestTitle.TabIndex = 6;
+            lblReadValueTestTitle.Text = "4. Read Value Test";
+            // 
+            // pnlRssiTestResult
+            // 
+            pnlRssiTestResult.BackColor = Color.DimGray;
+            pnlRssiTestResult.BorderStyle = BorderStyle.FixedSingle;
+            pnlRssiTestResult.Controls.Add(lblRssiTestResult);
+            pnlRssiTestResult.Location = new Point(222, 181);
+            pnlRssiTestResult.Margin = new Padding(3, 4, 3, 4);
+            pnlRssiTestResult.Name = "pnlRssiTestResult";
+            pnlRssiTestResult.Size = new Size(24, 27);
+            pnlRssiTestResult.TabIndex = 5;
+            // 
+            // lblRssiTestResult
+            // 
+            lblRssiTestResult.Dock = DockStyle.Fill;
+            lblRssiTestResult.ForeColor = Color.White;
+            lblRssiTestResult.Location = new Point(0, 0);
+            lblRssiTestResult.Name = "lblRssiTestResult";
+            lblRssiTestResult.Size = new Size(22, 25);
+            lblRssiTestResult.TabIndex = 0;
+            lblRssiTestResult.Text = "WAIT";
+            lblRssiTestResult.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // lblRssiTestTitle
+            // 
+            lblRssiTestTitle.AutoSize = true;
+            lblRssiTestTitle.Location = new Point(18, 184);
+            lblRssiTestTitle.Name = "lblRssiTestTitle";
+            lblRssiTestTitle.Size = new Size(100, 25);
+            lblRssiTestTitle.TabIndex = 4;
+            lblRssiTestTitle.Text = "3. Lora Test";
+            // 
+            // pnlButtonTestResult
+            // 
+            pnlButtonTestResult.BackColor = Color.DimGray;
+            pnlButtonTestResult.BorderStyle = BorderStyle.FixedSingle;
+            pnlButtonTestResult.Controls.Add(lblButtonTestResult);
+            pnlButtonTestResult.Location = new Point(222, 112);
+            pnlButtonTestResult.Margin = new Padding(3, 4, 3, 4);
+            pnlButtonTestResult.Name = "pnlButtonTestResult";
+            pnlButtonTestResult.Size = new Size(24, 27);
+            pnlButtonTestResult.TabIndex = 3;
+            // 
+            // lblButtonTestResult
+            // 
+            lblButtonTestResult.Dock = DockStyle.Fill;
+            lblButtonTestResult.ForeColor = Color.White;
+            lblButtonTestResult.Location = new Point(0, 0);
+            lblButtonTestResult.Name = "lblButtonTestResult";
+            lblButtonTestResult.Size = new Size(22, 25);
+            lblButtonTestResult.TabIndex = 0;
+            lblButtonTestResult.Text = "WAIT";
+            lblButtonTestResult.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // lblButtonTestTitle
+            // 
+            lblButtonTestTitle.AutoSize = true;
+            lblButtonTestTitle.Location = new Point(18, 112);
+            lblButtonTestTitle.Name = "lblButtonTestTitle";
+            lblButtonTestTitle.Size = new Size(119, 25);
+            lblButtonTestTitle.TabIndex = 2;
+            lblButtonTestTitle.Text = "2. Button Test";
+            // 
+            // pnlLedTestResult
+            // 
+            pnlLedTestResult.BackColor = Color.DimGray;
+            pnlLedTestResult.BorderStyle = BorderStyle.FixedSingle;
+            pnlLedTestResult.Controls.Add(lblLedTestResult);
+            pnlLedTestResult.Location = new Point(222, 39);
+            pnlLedTestResult.Margin = new Padding(3, 4, 3, 4);
+            pnlLedTestResult.Name = "pnlLedTestResult";
+            pnlLedTestResult.Size = new Size(24, 27);
+            pnlLedTestResult.TabIndex = 1;
+            // 
+            // lblLedTestResult
+            // 
+            lblLedTestResult.Dock = DockStyle.Fill;
+            lblLedTestResult.ForeColor = Color.White;
+            lblLedTestResult.Location = new Point(0, 0);
+            lblLedTestResult.Name = "lblLedTestResult";
+            lblLedTestResult.Size = new Size(22, 25);
+            lblLedTestResult.TabIndex = 0;
+            lblLedTestResult.Text = "WAIT";
+            lblLedTestResult.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // lblLedTestTitle
+            // 
+            lblLedTestTitle.AutoSize = true;
+            lblLedTestTitle.Location = new Point(18, 41);
+            lblLedTestTitle.Name = "lblLedTestTitle";
+            lblLedTestTitle.Size = new Size(96, 25);
+            lblLedTestTitle.TabIndex = 0;
+            lblLedTestTitle.Text = "1. LED Test";
+            // 
+            // btnDetectorConnect
+            // 
+            btnDetectorConnect.Location = new Point(273, 57);
+            btnDetectorConnect.Margin = new Padding(3, 4, 3, 4);
+            btnDetectorConnect.Name = "btnDetectorConnect";
+            btnDetectorConnect.Size = new Size(122, 40);
+            btnDetectorConnect.TabIndex = 8;
+            btnDetectorConnect.Text = "DT Connect";
+            btnDetectorConnect.UseVisualStyleBackColor = true;
+            // 
+            // cmbDetectorComPort
+            // 
+            cmbDetectorComPort.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbDetectorComPort.FormattingEnabled = true;
+            cmbDetectorComPort.Location = new Point(100, 61);
+            cmbDetectorComPort.Margin = new Padding(3, 4, 3, 4);
+            cmbDetectorComPort.Name = "cmbDetectorComPort";
+            cmbDetectorComPort.Size = new Size(166, 33);
+            cmbDetectorComPort.TabIndex = 7;
+            // 
+            // lblDetectorCom
+            // 
+            lblDetectorCom.AutoSize = true;
+            lblDetectorCom.Location = new Point(14, 65);
+            lblDetectorCom.Name = "lblDetectorCom";
+            lblDetectorCom.Size = new Size(83, 25);
+            lblDetectorCom.TabIndex = 6;
+            lblDetectorCom.Text = "DT COM:";
+            // 
+            // btnQrConnect
+            // 
+            btnQrConnect.Location = new Point(273, 15);
+            btnQrConnect.Margin = new Padding(3, 4, 3, 4);
+            btnQrConnect.Name = "btnQrConnect";
+            btnQrConnect.Size = new Size(122, 40);
+            btnQrConnect.TabIndex = 5;
+            btnQrConnect.Text = "QR Connect";
+            btnQrConnect.UseVisualStyleBackColor = true;
+            // 
+            // cmbQrComPort
+            // 
+            cmbQrComPort.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbQrComPort.FormattingEnabled = true;
+            cmbQrComPort.Location = new Point(100, 18);
+            cmbQrComPort.Margin = new Padding(3, 4, 3, 4);
+            cmbQrComPort.Name = "cmbQrComPort";
+            cmbQrComPort.Size = new Size(166, 33);
+            cmbQrComPort.TabIndex = 4;
+            // 
+            // lblQrCom
+            // 
+            lblQrCom.AutoSize = true;
+            lblQrCom.Location = new Point(14, 21);
+            lblQrCom.Name = "lblQrCom";
+            lblQrCom.Size = new Size(87, 25);
+            lblQrCom.TabIndex = 3;
+            lblQrCom.Text = "QR COM:";
+            // 
+            // txtSerial
+            // 
+            txtSerial.Location = new Point(80, 212);
+            txtSerial.Margin = new Padding(3, 4, 3, 4);
+            txtSerial.Name = "txtSerial";
+            txtSerial.Size = new Size(473, 31);
+            txtSerial.TabIndex = 2;
+            // 
+            // lblSerial
+            // 
+            lblSerial.AutoSize = true;
+            lblSerial.Location = new Point(14, 216);
+            lblSerial.Name = "lblSerial";
+            lblSerial.Size = new Size(58, 25);
+            lblSerial.TabIndex = 1;
+            lblSerial.Text = "Serial:";
+            // 
+            // grpLog
+            // 
+            grpLog.Controls.Add(btnClearLog);
+            grpLog.Controls.Add(txtLog);
+            grpLog.Location = new Point(14, 484);
+            grpLog.Margin = new Padding(3, 4, 3, 4);
+            grpLog.Name = "grpLog";
+            grpLog.Padding = new Padding(3, 4, 3, 4);
+            grpLog.Size = new Size(539, 328);
+            grpLog.TabIndex = 0;
+            grpLog.TabStop = false;
+            grpLog.Text = "Log";
+            // 
+            // btnClearLog
+            // 
+            btnClearLog.Location = new Point(408, 282);
+            btnClearLog.Margin = new Padding(3, 4, 3, 4);
+            btnClearLog.Name = "btnClearLog";
+            btnClearLog.Size = new Size(122, 38);
+            btnClearLog.TabIndex = 1;
+            btnClearLog.Text = "Clear Log";
+            btnClearLog.UseVisualStyleBackColor = true;
+            // 
+            // txtLog
+            // 
+            txtLog.Location = new Point(8, 34);
+            txtLog.Margin = new Padding(3, 4, 3, 4);
+            txtLog.Name = "txtLog";
+            txtLog.ReadOnly = true;
+            txtLog.Size = new Size(522, 240);
+            txtLog.TabIndex = 0;
+            txtLog.Text = "";
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
-            this.AutoScaleMode = AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1184, 661);
-            this.Controls.Add(this.splitMain);
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
-            this.Name = "Form1";
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.Text = "FCT G6T: HMQ";
-            this.splitMain.Panel1.ResumeLayout(false);
-            this.splitMain.Panel1.PerformLayout();
-            this.splitMain.Panel2.ResumeLayout(false);
-            this.splitMain.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
-            this.splitMain.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.picCamera)).EndInit();
-            this.grpLog.ResumeLayout(false);
-            this.grpTests.ResumeLayout(false);
-            this.grpTests.PerformLayout();
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1316, 826);
+            Controls.Add(splitMain);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Margin = new Padding(3, 4, 3, 4);
+            MaximizeBox = false;
+            Name = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "FCT G6T: HMQ";
+            splitMain.Panel1.ResumeLayout(false);
+            splitMain.Panel2.ResumeLayout(false);
+            splitMain.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)splitMain).EndInit();
+            splitMain.ResumeLayout(false);
+            pnlStartResult.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)picCamera).EndInit();
+            grpTests.ResumeLayout(false);
+            grpTests.PerformLayout();
+            pnlWdiTestResult.ResumeLayout(false);
+            pnlReadValueTestResult.ResumeLayout(false);
+            pnlRssiTestResult.ResumeLayout(false);
+            pnlButtonTestResult.ResumeLayout(false);
+            pnlLedTestResult.ResumeLayout(false);
+            grpLog.ResumeLayout(false);
+            ResumeLayout(false);
         }
     }
 }

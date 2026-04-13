@@ -18,7 +18,7 @@ namespace ConsoleApp6
         private readonly SerialService _qrSerialService;
         private readonly SerialService _detectorSerialService;
 
-        private static readonly OpenCvSharp.Rect DefaultLedRoi = new OpenCvSharp.Rect(1550, 1100, 200, 200);
+        private static readonly OpenCvSharp.Rect DefaultLedRoi = new OpenCvSharp.Rect(1300, 1200, 200, 200);
         private static readonly OpenCvSharp.Rect PushButtonLedRoi1 = new OpenCvSharp.Rect(1050, 500, 200, 200);
         private static readonly OpenCvSharp.Rect PushButtonLedRoi2 = new OpenCvSharp.Rect(1050, 1000, 200, 200);
         private static readonly OpenCvSharp.Rect PushButtonLedRoi3 = new OpenCvSharp.Rect(1050, 1500, 200, 200);
@@ -187,7 +187,6 @@ namespace ConsoleApp6
 
             _detectorSerialService.DataReceived += DetectorSerialService_DataReceived;
             _detectorSerialService.DataReceivedBytes += DetectorSerialService_DataReceivedBytes;
-            _detectorSerialService.DataReceivedRaw += (s, data) => Log($"DT ({_detectorSerialService.PortName}) RX RAW: {data}");
             _detectorSerialService.Error += (s, message) => Log($"DT ({_detectorSerialService.PortName}): {message}");
             _detectorSerialService.ConnectionChanged += DetectorSerialService_ConnectionChanged;
         }
@@ -1049,12 +1048,27 @@ namespace ConsoleApp6
 
         private void DetectorSerialService_DataReceived(object sender, string data)
         {
-            if (string.IsNullOrEmpty(data))
+            if (string.IsNullOrWhiteSpace(data))
             {
                 return;
             }
 
-            Log($"DT ({_detectorSerialService.PortName}) RX RAW: {data}");
+            var text = data.Trim();
+            Log($"DT ({_detectorSerialService.PortName}) RX RAW: {text}");
+
+            var rssiParsed = ParseDetectorRssiAck(text);
+            if (rssiParsed.HasValue && _pendingDetectorRssiTcs != null)
+            {
+                _pendingDetectorRssiTcs.TrySetResult(rssiParsed.Value);
+                _pendingDetectorRssiTcs = null;
+            }
+
+            var readValueParsed = ParseDetectorReadValueAck(text);
+            if (readValueParsed.HasValue && _pendingDetectorReadValueTcs != null)
+            {
+                _pendingDetectorReadValueTcs.TrySetResult(readValueParsed.Value);
+                _pendingDetectorReadValueTcs = null;
+            }
         }
 
         private void ParseDetectorFrames(byte[] data)
@@ -1614,45 +1628,62 @@ namespace ConsoleApp6
         {
             SetRssiTestResultDisplay("WAIT", Color.DimGray);
 
-            var packet = BuildDetectorRssiCommand();
-            var tcs = new TaskCompletionSource<bool?>(TaskCreationOptions.RunContinuationsAsynchronously);
-            _pendingDetectorRssiTcs = tcs;
+            const int maxRetry = 5;
+            const int timeoutMs = 5000;
 
-            Log("PC send: <SOH>R1<STX>1.0.H()<ETX><BCC>");
-            LogFrame("DT TX", _detectorSerialService.PortName, packet);
-            _detectorSerialService.SendBytes(packet);
-            Log($"DT ({_detectorSerialService.PortName}) wait ACK 3s");
-
-            var completed = await Task.WhenAny(tcs.Task, Task.Delay(3000));
-            if (completed != tcs.Task)
+            for (var attempt = 1; attempt <= maxRetry; attempt++)
             {
-                _pendingDetectorRssiTcs = null;
-                FailRssiAndReadValueTests("RSSI Test timeout.");
-                return;
-            }
+                var packet = BuildDetectorRssiCommand();
+                var tcs = new TaskCompletionSource<bool?>(TaskCreationOptions.RunContinuationsAsynchronously);
+                _pendingDetectorRssiTcs = tcs;
 
-            var result = await tcs.Task;
-            if (result == true)
-            {
-                SetRssiTestResultDisplay("PASS", Color.SeaGreen);
-                Log("RSSI Test PASSED.");
+                Log($"PC send: <SOH>R1<STX>1.0.H()<ETX><BCC> (attempt {attempt}/{maxRetry})");
+                LogFrame("DT TX", _detectorSerialService.PortName, packet);
+                _detectorSerialService.SendBytes(packet);
+                Log($"DT ({_detectorSerialService.PortName}) wait ACK {timeoutMs / 1000}s");
 
-                var readValuePassed = await RunReadValueTestAsync();
-                if (readValuePassed)
+                var completed = await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
+                if (completed != tcs.Task)
                 {
-                    await RunWdiTestAsync();
+                    _pendingDetectorRssiTcs = null;
+                    Log($"RSSI timeout attempt {attempt}/{maxRetry}.");
+
+                    if (attempt == maxRetry)
+                    {
+                        FailRssiAndReadValueTests("Lora Test timeout.");
+                        return;
+                    }
+
+                    continue;
                 }
+
+                var result = await tcs.Task;
+                if (result == true)
+                {
+                    SetRssiTestResultDisplay("PASS", Color.SeaGreen);
+                    Log("RSSI Test PASSED.");
+
+                    var readValuePassed = await RunReadValueTestAsync();
+                    if (readValuePassed)
+                    {
+                        await RunWdiTestAsync();
+                    }
+                    return;
+                }
+
+                SetRssiTestResultDisplay("ERROR", Color.Firebrick);
+                SetTestResultsErrorFrom(MainTestStep.ReadValue);
+                FailAndStopAllTests("RSSI Test failed.");
                 return;
             }
-
-            SetRssiTestResultDisplay("ERROR", Color.Firebrick);
-            SetTestResultsErrorFrom(MainTestStep.ReadValue);
-            FailAndStopAllTests("RSSI Test failed.");
         }
 
         private async Task<bool> RunReadValueTestAsync()
         {
             SetReadValueTestResultDisplay("WAIT", Color.DimGray);
+
+            const int maxRetry = 5;
+            const int timeoutMs = 5000;
 
             string readValuePattern;
             byte[] packet;
@@ -1672,39 +1703,51 @@ namespace ConsoleApp6
                 return true;
             }
 
-            var tcs = new TaskCompletionSource<bool?>(TaskCreationOptions.RunContinuationsAsynchronously);
-            _pendingDetectorReadValueTcs = tcs;
-            _pendingReadValuePattern = readValuePattern;
-
-            Log($"PC send: <SOH>R1<STX>{readValuePattern.TrimEnd('(')}()<ETX><BCC>");
-            LogFrame("DT TX", _detectorSerialService.PortName, packet);
-            _detectorSerialService.SendBytes(packet);
-            Log($"DT ({_detectorSerialService.PortName}) wait Read Value ACK 3s");
-
-            var completed = await Task.WhenAny(tcs.Task, Task.Delay(3000));
-            if (completed != tcs.Task)
+            for (var attempt = 1; attempt <= maxRetry; attempt++)
             {
+                var tcs = new TaskCompletionSource<bool?>(TaskCreationOptions.RunContinuationsAsynchronously);
+                _pendingDetectorReadValueTcs = tcs;
+                _pendingReadValuePattern = readValuePattern;
+
+                Log($"PC send: <SOH>R1<STX>{readValuePattern.TrimEnd('(')}()<ETX><BCC> (attempt {attempt}/{maxRetry})");
+                LogFrame("DT TX", _detectorSerialService.PortName, packet);
+                _detectorSerialService.SendBytes(packet);
+                Log($"DT ({_detectorSerialService.PortName}) wait Read Value ACK {timeoutMs / 1000}s");
+
+                var completed = await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
+                if (completed != tcs.Task)
+                {
+                    _pendingDetectorReadValueTcs = null;
+                    _pendingReadValuePattern = null;
+                    Log($"Read Value timeout attempt {attempt}/{maxRetry}.");
+
+                    if (attempt == maxRetry)
+                    {
+                        SetReadValueTestResultDisplay("ERROR", Color.Firebrick);
+                        SetWdiTestResultDisplay("ERROR", Color.Firebrick);
+                        FailAndStopAllTests("Read Value Test timeout.");
+                        return false;
+                    }
+
+                    continue;
+                }
+
+                var result = await tcs.Task;
                 _pendingDetectorReadValueTcs = null;
                 _pendingReadValuePattern = null;
+                if (result == true)
+                {
+                    SetReadValueTestResultDisplay("PASS", Color.SeaGreen);
+                    Log("Read Value Test PASSED.");
+                    return true;
+                }
+
                 SetReadValueTestResultDisplay("ERROR", Color.Firebrick);
                 SetWdiTestResultDisplay("ERROR", Color.Firebrick);
-                FailAndStopAllTests("Read Value Test timeout.");
+                FailAndStopAllTests("Read Value Test failed.");
                 return false;
             }
 
-            var result = await tcs.Task;
-            _pendingDetectorReadValueTcs = null;
-            _pendingReadValuePattern = null;
-            if (result == true)
-            {
-                SetReadValueTestResultDisplay("PASS", Color.SeaGreen);
-                Log("Read Value Test PASSED.");
-                return true;
-            }
-
-            SetReadValueTestResultDisplay("ERROR", Color.Firebrick);
-            SetWdiTestResultDisplay("ERROR", Color.Firebrick);
-            FailAndStopAllTests("Read Value Test failed.");
             return false;
         }
 
@@ -1850,6 +1893,16 @@ namespace ConsoleApp6
             if (string.IsNullOrEmpty(detectorData))
             {
                 return null;
+            }
+
+            if (detectorData.IndexOf("On Production Mode", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return true;
+            }
+
+            if (detectorData.IndexOf("Off Production Mode", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return false;
             }
 
             var hBinaryPass = "1.0.H(" + (char)0x01 + ")";
@@ -2155,7 +2208,7 @@ namespace ConsoleApp6
             var station = GetSelectedStation();
             var serial = txtSerial.Text.Trim();
             var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            var resultDir = @"D:\New folder\FCT-G6T\FCT-G6T";
+            var resultDir = @"E:\Work\G6T\G6T_Quyet\FCT-G6T";
             Directory.CreateDirectory(resultDir);
             var path = Path.Combine(resultDir, "result.txt");
 
@@ -2230,6 +2283,11 @@ namespace ConsoleApp6
         private static string ToHex(byte[] data)
         {
             return BitConverter.ToString(data).Replace('-', ' ');
+        }
+
+        private void rdoPushButton_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
