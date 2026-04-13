@@ -10,6 +10,7 @@ namespace ConsoleApp6
         public string PortName => _serialPort?.PortName ?? string.Empty;
 
         public event EventHandler<string> DataReceived;
+        public event EventHandler<string> DataReceivedRaw;
         public event EventHandler<byte[]> DataReceivedBytes;
         public event EventHandler<string> Error;
         public event EventHandler<bool> ConnectionChanged;
@@ -156,6 +157,7 @@ namespace ConsoleApp6
                 OnDataReceivedBytes(data);
 
                 var raw = _serialPort.Encoding.GetString(data);
+                OnDataReceivedRaw(raw);
                 if (!string.IsNullOrWhiteSpace(raw))
                 {
                     OnDataReceived(raw.Trim());
@@ -170,6 +172,15 @@ namespace ConsoleApp6
         private void OnDataReceived(string data)
         {
             var handler = DataReceived;
+            if (handler != null)
+            {
+                handler(this, data);
+            }
+        }
+
+        private void OnDataReceivedRaw(string data)
+        {
+            var handler = DataReceivedRaw;
             if (handler != null)
             {
                 handler(this, data);

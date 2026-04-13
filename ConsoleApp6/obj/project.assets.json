@@ -2042,11 +2042,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\New folder\\FCT-G6T\\FCT-G6T\\ConsoleApp6\\ConsoleApp6.csproj",
+      "projectUniqueName": "D:\\New folder\\FCT-G6T\\FCT-G6T_V2\\FCT-G6T\\FCT-G6T\\ConsoleApp6\\ConsoleApp6.csproj",
       "projectName": "ConsoleApp6",
-      "projectPath": "D:\\New folder\\FCT-G6T\\FCT-G6T\\ConsoleApp6\\ConsoleApp6.csproj",
+      "projectPath": "D:\\New folder\\FCT-G6T\\FCT-G6T_V2\\FCT-G6T\\FCT-G6T\\ConsoleApp6\\ConsoleApp6.csproj",
       "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-      "outputPath": "D:\\New folder\\FCT-G6T\\FCT-G6T\\ConsoleApp6\\obj\\",
+      "outputPath": "D:\\New folder\\FCT-G6T\\FCT-G6T_V2\\FCT-G6T\\FCT-G6T\\ConsoleApp6\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

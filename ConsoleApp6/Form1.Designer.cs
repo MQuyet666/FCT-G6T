@@ -380,7 +380,7 @@ namespace ConsoleApp6
             this.lblRssiTestTitle.Name = "lblRssiTestTitle";
             this.lblRssiTestTitle.Size = new System.Drawing.Size(73, 20);
             this.lblRssiTestTitle.TabIndex = 4;
-            this.lblRssiTestTitle.Text = "3. RSSI Test";
+            this.lblRssiTestTitle.Text = "3. Lora Test";
             // 
             // pnlRssiTestResult
             // 

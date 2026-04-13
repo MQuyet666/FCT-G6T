@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DVPCameraType;
@@ -20,6 +22,7 @@ namespace ConsoleApp6
 
         public event EventHandler<Bitmap> FrameReady;
         public event EventHandler<bool> LedStatusChanged;
+        public event EventHandler<IReadOnlyList<LedDetector.LedRoiDetection>> RoiLedStatusUpdated;
         public event EventHandler<string> Error;
 
         public CameraService(LedDetector ledDetector)
@@ -155,17 +158,48 @@ namespace ConsoleApp6
                     using (var sourceFrame = mat.Clone())
                     {
                         int redCount;
-                        var ledOn = _ledDetector.IsLedOn(sourceFrame, out redCount);
+                        var detections = _ledDetector.DetectLeds(sourceFrame, out redCount);
+                        var ledOn = false;
+                        if (_ledDetector.UseMultipleRois)
+                        {
+                            var activeCount = 0;
+                            var allOn = true;
+                            foreach (var detection in detections)
+                            {
+                                activeCount++;
+                                if (!detection.LedOn)
+                                {
+                                    allOn = false;
+                                }
+                            }
+
+                            ledOn = activeCount == 3 && allOn;
+                        }
+                        else
+                        {
+                            foreach (var detection in detections)
+                            {
+                                if (detection.LedOn)
+                                {
+                                    ledOn = true;
+                                    break;
+                                }
+                            }
+                        }
                         if (ledOn != _lastLedOn)
                         {
                             _lastLedOn = ledOn;
                             OnLedStatusChanged(ledOn);
                         }
 
+                        OnRoiLedStatusUpdated(detections.ToArray());
+
                         using (var displayFrame = sourceFrame.Clone())
                         {
-                            var roi = _ledDetector.Roi;
-                            Cv2.Rectangle(displayFrame, roi, ledOn ? Scalar.Lime : Scalar.Red, 2);
+                            foreach (var detection in detections)
+                            {
+                                Cv2.Rectangle(displayFrame, detection.Roi, detection.LedOn ? Scalar.Lime : Scalar.Red, 2);
+                            }
                             var bmp = BitmapConverter.ToBitmap(displayFrame);
                             OnFrameReady(bmp);
                         }
@@ -194,6 +228,15 @@ namespace ConsoleApp6
             if (handler != null)
             {
                 handler(this, ledOn);
+            }
+        }
+
+        private void OnRoiLedStatusUpdated(IReadOnlyList<LedDetector.LedRoiDetection> detections)
+        {
+            var handler = RoiLedStatusUpdated;
+            if (handler != null)
+            {
+                handler(this, detections);
             }
         }
 
