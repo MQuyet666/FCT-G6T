@@ -16,8 +16,9 @@ namespace ConsoleApp6
         }
 
         public Rect Roi { get; set; } = new Rect(1550, 1100, 200, 200); // Rect(1550, 1100, 200, 200);
+        public Rect Roi3 { get; set; } = new Rect(1550, 1100, 200, 200);
         public Rect Roi2 { get; set; } = new Rect(1550, 1500, 600, 600);
-        public Rect Roi3 { get; set; } = new Rect(1550, 1500, 1000, 1000);
+        public Rect Roi1 { get; set; } = new Rect(1550, 1500, 1000, 1000);
         public bool UseMultipleRois { get; set; }
         public int PixelThreshold { get; set; } = 120;
 
@@ -74,12 +75,15 @@ namespace ConsoleApp6
 
         public IEnumerable<Rect> GetRois()
         {
-            yield return Roi;
             if (UseMultipleRois)
             {
+                yield return Roi1;
                 yield return Roi2;
                 yield return Roi3;
+                yield break;
             }
+
+            yield return Roi;
         }
 
         private LedColor GetRoiColor(Rect roi)
@@ -89,6 +93,11 @@ namespace ConsoleApp6
                 return LedColor.All;
             }
 
+            if (roi == Roi1)
+            {
+                return LedColor.Cyan;
+            }
+
             if (roi == Roi2)
             {
                 return LedColor.Yellow;
@@ -96,10 +105,10 @@ namespace ConsoleApp6
 
             if (roi == Roi3)
             {
-                return LedColor.Cyan;
+                return LedColor.Red;
             }
 
-            return LedColor.Red;
+            return LedColor.All;
         }
 
         private int CountLedPixels(Mat frame, Rect roi, LedColor color)

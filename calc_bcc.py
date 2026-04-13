@@ -9,6 +9,10 @@ def calc_bcc(hex_str):
     return bcc
 
 if __name__ == "__main__":
-    user_input = input("Nhập chuỗi hex (cách nhau bởi dấu cách): ")
-    bcc = calc_bcc(user_input)
-    print(f"BCC = {bcc:02X}")
+    while True:
+        user_input = input("Nhập chuỗi hex (cách nhau bởi dấu cách, Enter để thoát): ")
+        if not user_input.strip():
+            print("Đã thoát chương trình.")
+            break
+        bcc = calc_bcc(user_input)
+        print(f"BCC = {bcc:02X}")
