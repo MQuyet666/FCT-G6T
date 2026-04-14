@@ -310,3 +310,337 @@ Result: FAIL
 Error: Test Chuông đèn failed: Battery fail (0x02)
 Log: 1F 2F 3F FF 01 06 06 EE
 //*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-13 16:03:11
+Result: FAIL
+Error: DT COM connect failed for RSSI.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-13 16:16:46
+Result: FAIL
+Error: DT COM connect failed for RSSI.
+Log: 1F 2F 3F FF 01 02 06 EA
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-13 16:17:42
+Result: FAIL
+Error: DT COM connect failed for RSSI.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-13 16:19:49
+Result: FAIL
+Error: DT COM connect failed for RSSI.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-13 16:29:07
+Result: FAIL
+Error: Read Value Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-13 16:29:20
+Result: FAIL
+Error: Button Test timeout.
+Log: 1F 2F 3F FF 01 02 06 EA
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-13 16:29:57
+Result: FAIL
+Error: Lora Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-14 07:46:15
+Result: FAIL
+Error: LED blink not detected.
+Log: 1F 2F 3F FF 01 04 06 EC
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-14 07:47:52
+Result: FAIL
+Error: Button Test failed.
+Log: 1F 2F 3F FF 01 02 15 F9
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-14 07:48:34
+Result: FAIL
+Error: Read Value Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 07:49:12
+Result: FAIL
+Error: Lora Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 07:49:53
+Result: FAIL
+Error: Lora Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 07:50:08
+Result: FAIL
+Error: LED blink not detected.
+Log: 1F 2F 3F FF 01 04 06 EC
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 07:50:45
+Result: FAIL
+Error: Lora Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-14 07:51:31
+Result: FAIL
+Error: Read Value Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-14 08:04:24
+Result: FAIL
+Error: Read Value Test timeout.
+Log: 1F 2F 3F FF 01 02 06 EA
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 08:05:24
+Result: FAIL
+Error: Lora Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 08:11:49
+Result: FAIL
+Error: Lora Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-14 08:20:57
+Result: FAIL
+Error: Button Test failed.
+Log: 1F 2F 3F FF 01 02 15 F9
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-14 08:21:48
+Result: FAIL
+Error: Lora Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-14 08:27:07
+Result: FAIL
+Error: Read Value Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-14 08:29:47
+Result: FAIL
+Error: Read Value Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-14 08:36:53
+Result: FAIL
+Error: Read Value Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 08:37:10
+Result: FAIL
+Error: Lora Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 08:44:48
+Result: FAIL
+Error: LED blink not detected.
+Log: 1F 2F 3F FF 01 04 06 EC
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 08:45:00
+Result: FAIL
+Error: LED blink not detected.
+Log: 1F 2F 3F FF 01 04 06 EC
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 08:45:20
+Result: FAIL
+Error: Lora Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-14 08:46:15
+Result: FAIL
+Error: Read Value Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-14 08:52:20
+Result: FAIL
+Error: Read Value Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 08:52:37
+Result: PASS
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 08:54:10
+Result: PASS
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 08:54:27
+Result: PASS
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-14 08:54:46
+Result: FAIL
+Error: Lora Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-14 08:55:05
+Result: FAIL
+Error: Button Test failed.
+Log: 1F 2F 3F FF 01 02 15 F9
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 08:56:03
+Result: FAIL
+Error: Read Value Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 09:02:21
+Result: FAIL
+Error: Lora Test timeout.
+Log: 1F 2F 3F FF 01 02 15 F9
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 09:02:58
+Result: FAIL
+Error: Lora Test timeout.
+Log: 1F 2F 3F FF 01 02 15 F9
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 09:06:04
+Result: FAIL
+Error: Button Test timeout.
+Log: 1F 2F 3F FF 01 04 06 EC
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 09:06:22
+Result: FAIL
+Error: Read Value Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 09:11:00
+Result: PASS
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 09:12:38
+Result: PASS
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 09:34:03
+Result: PASS
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 09:34:21
+Result: FAIL
+Error: Button Test timeout.
+Log: 1F 2F 3F FF 01 04 06 EC
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 09:34:44
+Result: FAIL
+Error: LED blink not detected.
+Log: 1F 2F 3F FF 01 04 06 EC
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 09:34:50
+Result: FAIL
+Error: LED blink not detected.
+Log: 1F 2F 3F FF 01 08 06 E0
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 09:35:37
+Result: FAIL
+Error: Lora Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 09:43:09
+Result: FAIL
+Error: LED blink not detected.
+Log: 1F 2F 3F FF 01 04 06 EC
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 09:43:47
+Result: PASS
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo khói
+DateTime: 2026-04-14 09:44:06
+Result: FAIL
+Error: Read Value Test timeout.
+Log: 1F 2F 3F FF 01 03 06 EB
+//*******************************END TEST**********************************//
+Serial: SN001
+Station: Đầu báo nhiệt
+DateTime: 2026-04-14 09:47:15
+Result: PASS
+//*******************************END TEST**********************************//

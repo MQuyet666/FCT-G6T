@@ -56,6 +56,11 @@ namespace ConsoleApp6
         private TaskCompletionSource<bool?> _pendingDetectorRssiTcs;
         private TaskCompletionSource<bool?> _pendingDetectorReadValueTcs;
         private string _pendingReadValuePattern;
+        private readonly StringBuilder _detectorTextBuffer = new StringBuilder();
+        private readonly Queue<string> _logQueue = new Queue<string>();
+        private bool _logFlushScheduled;
+        private const int MaxLogTextLength = 200000;
+        private const int LogTrimChunkLength = 50000;
         private string _lastG6tFrameHex;
         private DateTime _lastCameraFrameAt;
 
@@ -340,8 +345,8 @@ namespace ConsoleApp6
             pnlRssiTestResult.Visible = !isPushButton;
             lblReadValueTestTitle.Visible = !isPushButton && !isHornStrobe;
             pnlReadValueTestResult.Visible = !isPushButton && !isHornStrobe;
-            lblWdiTestTitle.Visible = !isPushButton;
-            pnlWdiTestResult.Visible = !isPushButton;
+            lblWdiTestTitle.Visible = false;
+            pnlWdiTestResult.Visible = false;
 
             if (isPushButton)
             {
@@ -462,7 +467,7 @@ namespace ConsoleApp6
             txtLog.Clear();
         }
 
-        private void BtnConnect_Click(object sender, EventArgs e)
+        private async void BtnConnect_Click(object sender, EventArgs e)
         {
             LogEvent(nameof(BtnConnect_Click));
             if (_serialService.IsConnected)
@@ -485,9 +490,20 @@ namespace ConsoleApp6
 
             if (connected)
             {
-                var connectFrame = BuildFrame(0x01, 0x00);
-                _serialService.SendBytes(connectFrame);
-                Log($"G6T ({port}) TX (connect): " + ToHex(connectFrame));
+                var connectAck = await SendFrameAndWaitResponseAsync(0x01, 0x00);
+                if (connectAck == 0x06)
+                {
+                    Log("G6T connect ACK received: 0x06 (success)");
+                    await SendExtendedCommand0805Async("after G6T connect", 0x00);
+                }
+                else if (connectAck.HasValue)
+                {
+                    Log($"G6T connect ACK failed: 0x{connectAck.Value:X2}");
+                }
+                else
+                {
+                    Log("G6T connect ACK timeout.");
+                }
             }
         }
 
@@ -1011,6 +1027,11 @@ namespace ConsoleApp6
 
             if (!connected)
             {
+                _detectorTextBuffer.Clear();
+            }
+
+            if (!connected)
+            {
                 lock (_frameLock)
                 {
                     _detectorG6tRxBuffer.Clear();
@@ -1111,18 +1132,28 @@ namespace ConsoleApp6
             var text = data.Trim();
             Log($"DT ({_detectorSerialService.PortName}) RX RAW: {text}");
 
-            var rssiParsed = ParseDetectorRssiAck(text);
+            _detectorTextBuffer.Append(text);
+            if (_detectorTextBuffer.Length > 2048)
+            {
+                _detectorTextBuffer.Remove(0, _detectorTextBuffer.Length - 2048);
+            }
+
+            var mergedText = _detectorTextBuffer.ToString();
+
+            var rssiParsed = ParseDetectorRssiAck(mergedText);
             if (rssiParsed.HasValue && _pendingDetectorRssiTcs != null)
             {
                 _pendingDetectorRssiTcs.TrySetResult(rssiParsed.Value);
                 _pendingDetectorRssiTcs = null;
+                _detectorTextBuffer.Clear();
             }
 
-            var readValueParsed = ParseDetectorReadValueAck(text);
+            var readValueParsed = ParseDetectorReadValueAck(mergedText);
             if (readValueParsed.HasValue && _pendingDetectorReadValueTcs != null)
             {
                 _pendingDetectorReadValueTcs.TrySetResult(readValueParsed.Value);
                 _pendingDetectorReadValueTcs = null;
+                _detectorTextBuffer.Clear();
             }
         }
 
@@ -1267,13 +1298,88 @@ namespace ConsoleApp6
                 return;
             }
 
-            if (InvokeRequired)
+            if (IsDisposed || Disposing)
             {
-                BeginInvoke((Action)(() => Log(message)));
                 return;
             }
 
-            txtLog.AppendText(string.Format("[{0:HH:mm:ss}] {1}{2}", DateTime.Now, message, Environment.NewLine));
+            lock (_logQueue)
+            {
+                _logQueue.Enqueue(message ?? string.Empty);
+
+                while (_logQueue.Count > 5000)
+                {
+                    _logQueue.Dequeue();
+                }
+
+                if (_logFlushScheduled)
+                {
+                    return;
+                }
+
+                _logFlushScheduled = true;
+            }
+
+            BeginInvoke((Action)FlushLogQueue);
+        }
+
+        private void FlushLogQueue()
+        {
+            if (!IsHandleCreated || IsDisposed || Disposing)
+            {
+                return;
+            }
+
+            const int maxLinesPerFlush = 200;
+            var flushed = 0;
+            var batch = new StringBuilder();
+            while (flushed < maxLinesPerFlush)
+            {
+                string message;
+                lock (_logQueue)
+                {
+                    if (_logQueue.Count == 0)
+                    {
+                        _logFlushScheduled = false;
+                        break;
+                    }
+
+                    message = _logQueue.Dequeue();
+                }
+
+                batch.AppendFormat("[{0:HH:mm:ss}] {1}{2}", DateTime.Now, message, Environment.NewLine);
+                flushed++;
+            }
+
+            if (batch.Length > 0)
+            {
+                AppendLogText(batch.ToString());
+            }
+
+            lock (_logQueue)
+            {
+                if (_logQueue.Count > 0)
+                {
+                    BeginInvoke((Action)FlushLogQueue);
+                }
+                else
+                {
+                    _logFlushScheduled = false;
+                }
+            }
+        }
+
+        private void AppendLogText(string text)
+        {
+            if (txtLog.TextLength > MaxLogTextLength)
+            {
+                var trimLength = Math.Min(LogTrimChunkLength, txtLog.TextLength);
+                txtLog.Select(0, trimLength);
+                txtLog.SelectedText = string.Empty;
+            }
+
+            txtLog.AppendText(text);
+            txtLog.SelectionStart = txtLog.TextLength;
             txtLog.ScrollToCaret();
         }
 
@@ -1374,6 +1480,11 @@ namespace ConsoleApp6
 
         private static bool IsStepRequiredForDevice(DeviceType device, MainTestStep step)
         {
+            if (step == MainTestStep.Wdi)
+            {
+                return false;
+            }
+
             if (device == DeviceType.PushButton)
             {
                 return step == MainTestStep.Led || step == MainTestStep.Button;
@@ -1614,6 +1725,21 @@ namespace ConsoleApp6
                     Log("Button Test PASSED.");
                     ApplyButtonTestResultCode(0x04);
 
+                    var selectedDevice = GetSelectedDeviceType();
+                    if (selectedDevice == DeviceType.SmokeDetector || selectedDevice == DeviceType.HeatDetector)
+                    {
+                        var cmd08Source = selectedDevice == DeviceType.SmokeDetector
+                            ? "after Smoke Button Test pass"
+                            : "after Heat Button Test pass";
+                        var cmd08Ok = await SendExtendedCommand0805Async(cmd08Source, 0x01);
+                        if (!cmd08Ok)
+                        {
+                            SetTestResultsErrorFrom(MainTestStep.Rssi);
+                            FailAndStopAllTests("ACK cmd=0x08 failed after Button Test.");
+                            return;
+                        }
+                    }
+
                     var rssiReady = await SendRssiSetCommandAsync();
                     if (!rssiReady)
                     {
@@ -1699,31 +1825,15 @@ namespace ConsoleApp6
 
             SetRssiTestResultDisplay("PASS", Color.SeaGreen);
 
-            Log("Starting Test Chuông đèn...");
-            SetWdiTestResultDisplay("WAIT", Color.DimGray);
-            var detectorReady = await ConnectDetectorForHornStrobeAsync();
-            if (!detectorReady)
+            var hornButtonCmd08Ok = await SendExtendedCommand0805Async("after HornStrobe Button Test pass", 0x01);
+            if (!hornButtonCmd08Ok)
             {
+                SetTestResultsErrorFrom(MainTestStep.Wdi);
+                FailAndStopAllTests("ACK cmd=0x08 failed after HornStrobe Button Test.");
                 return;
             }
 
-            var hornResponse = await SendDetectorFrameAndWaitResponseAsync(0x07, 0x00);
-            if (!hornResponse.HasValue)
-            {
-                SetWdiTestResultDisplay("ERROR", Color.Firebrick);
-                FailAndStopAllTests("Test Chuông đèn timeout.");
-                return;
-            }
-
-            if (hornResponse.Value == 0x00)
-            {
-                SetWdiTestResultDisplay("PASS", Color.SeaGreen);
-                Log("Test Chuông đèn PASSED (code 0x00).");
-                return;
-            }
-
-            SetWdiTestResultDisplay("ERROR", Color.Firebrick);
-            FailAndStopAllTests($"Test Chuông đèn failed: {GetHornStrobeErrorMessage(hornResponse.Value)}");
+            Log("Skip WDI test (disabled for all devices).");
         }
 
         private async Task<bool> ConnectDetectorForHornStrobeAsync()
@@ -1811,14 +1921,14 @@ namespace ConsoleApp6
         {
             if (_detectorSerialService.IsConnected)
             {
-                Log($"DT ({_detectorSerialService.PortName}) ready for RSSI.");
+                Log($"DT ({_detectorSerialService.PortName}) ready for Lora.");
                 return true;
             }
 
             if (cmbDetectorComPort.SelectedItem == null)
             {
-                Log("Please select detector COM port for RSSI.");
-                FailRssiAndReadValueTests("DT COM not selected for RSSI.");
+                Log("Please select detector COM port for Lora.");
+                FailRssiAndReadValueTests("DT COM not selected for Lora.");
                 return false;
             }
 
@@ -1826,12 +1936,12 @@ namespace ConsoleApp6
             var connected = await Task.Run(() => _detectorSerialService.Connect(port, DetectorDefaultBaudRate));
             if (connected)
             {
-                Log($"DT ({port}) connected for RSSI at {DetectorDefaultBaudRate} baud.");
+                Log($"DT ({port}) connected for Lora at {DetectorDefaultBaudRate} baud.");
                 return true;
             }
 
-            Log($"DT ({port}) connect failed for RSSI at {DetectorDefaultBaudRate} baud.");
-            FailRssiAndReadValueTests("DT COM connect failed for RSSI.");
+            Log($"DT ({port}) connect failed for Lora at {DetectorDefaultBaudRate} baud.");
+            FailRssiAndReadValueTests("DT COM connect failed for Lora.");
             return false;
         }
 
@@ -1840,7 +1950,7 @@ namespace ConsoleApp6
             SetRssiTestResultDisplay("WAIT", Color.DimGray);
 
             const int maxRetry = 5;
-            const int timeoutMs = 5000;
+            const int timeoutMs = 2000;
 
             for (var attempt = 1; attempt <= maxRetry; attempt++)
             {
@@ -1857,7 +1967,7 @@ namespace ConsoleApp6
                 if (completed != tcs.Task)
                 {
                     _pendingDetectorRssiTcs = null;
-                    Log($"RSSI timeout attempt {attempt}/{maxRetry}.");
+                    Log($"Lora timeout attempt {attempt}/{maxRetry}.");
 
                     if (attempt == maxRetry)
                     {
@@ -1872,19 +1982,15 @@ namespace ConsoleApp6
                 if (result == true)
                 {
                     SetRssiTestResultDisplay("PASS", Color.SeaGreen);
-                    Log("RSSI Test PASSED.");
+                    Log("Lora Test PASSED.");
 
-                    var readValuePassed = await RunReadValueTestAsync();
-                    if (readValuePassed)
-                    {
-                        await RunWdiTestAsync();
-                    }
+                    await RunReadValueTestAsync();
                     return;
                 }
 
                 SetRssiTestResultDisplay("ERROR", Color.Firebrick);
                 SetTestResultsErrorFrom(MainTestStep.ReadValue);
-                FailAndStopAllTests("RSSI Test failed.");
+                FailAndStopAllTests("Lora Test failed.");
                 return;
             }
         }
@@ -1894,7 +2000,7 @@ namespace ConsoleApp6
             SetReadValueTestResultDisplay("WAIT", Color.DimGray);
 
             const int maxRetry = 5;
-            const int timeoutMs = 5000;
+            const int timeoutMs = 1000;
 
             string readValuePattern;
             byte[] packet;
@@ -2341,6 +2447,21 @@ namespace ConsoleApp6
             return frame;
         }
 
+        private static byte[] BuildExtendedFrame0805(byte data)
+        {
+            var frame = new byte[9];
+            frame[0] = 0x1F;
+            frame[1] = 0x2F;
+            frame[2] = 0x3F;
+            frame[3] = 0xFF;
+            frame[4] = 0x00;
+            frame[5] = 0x08;
+            frame[6] = 0x05;
+            frame[7] = data;
+            frame[8] = ComputeBcc(frame, 8);
+            return frame;
+        }
+
         private static byte ComputeBcc(byte[] buffer, int length)
         {
             byte bcc = 0;
@@ -2605,16 +2726,87 @@ namespace ConsoleApp6
             if (response.HasValue && response.Value == 0x06)
             {
                 Log("Final power_off ACK received: 0x06 (success).");
-                return;
             }
-
-            if (response.HasValue)
+            else if (response.HasValue)
             {
                 Log($"Final power_off ACK failed: 0x{response.Value:X2}.");
-                return;
+            }
+            else
+            {
+                Log("Final power_off ACK timeout.");
             }
 
-            Log("Final power_off ACK timeout.");
+            await SendExtendedCommand0805Async("after test completed", 0x00);
+        }
+
+        private async Task<bool> SendExtendedCommand0805Async(string source, byte data)
+        {
+            if (!_serialService.IsConnected)
+            {
+                Log($"Skip cmd=0x08 (source: {source}): G6T COM is not connected.");
+                return false;
+            }
+
+            for (var attempt = 1; attempt <= 2; attempt++)
+            {
+                var frame = BuildExtendedFrame0805(data);
+                _serialService.SendBytes(frame);
+                LogFrame("G6T TX", _serialService.PortName, frame);
+                Log($"G6T ({_serialService.PortName}) wait cmd=0x08 timeout=3000ms ({source}, attempt {attempt}/2)");
+
+                var response = await WaitForResponseAsync(0x08, 3000);
+                if (response == 0x06)
+                {
+                    Log("ACK cmd=0x08 received: 0x06 (pass)");
+                    return true;
+                }
+
+                if (response == 0x15)
+                {
+                    Log("ACK cmd=0x08 received: 0x15 (fail)");
+                    return false;
+                }
+
+                if (response.HasValue)
+                {
+                    Log($"ACK cmd=0x08 received: 0x{response.Value:X2}");
+                    return false;
+                }
+
+                if (attempt == 1)
+                {
+                    Log("ACK cmd=0x08 timeout, retry...");
+                }
+            }
+
+            Log("ACK cmd=0x08 timeout.");
+            return false;
+        }
+
+        private async Task<byte?> WaitForResponseAsync(byte command, int timeoutMs)
+        {
+            var tcs = new TaskCompletionSource<byte?>(TaskCreationOptions.RunContinuationsAsynchronously);
+            lock (_frameLock)
+            {
+                _pendingFrameCmd = command;
+                _pendingResponseTcs = tcs;
+            }
+
+            var completedTask = await Task.WhenAny(tcs.Task, Task.Delay(timeoutMs));
+            if (completedTask == tcs.Task)
+            {
+                return await tcs.Task;
+            }
+
+            lock (_frameLock)
+            {
+                if (ReferenceEquals(_pendingResponseTcs, tcs))
+                {
+                    _pendingResponseTcs = null;
+                }
+            }
+
+            return null;
         }
 
         private string GetSelectedStation()
